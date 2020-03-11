@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-07-21 16:07:15
- * @LastEditTime: 2019-12-12 15:01:44
+ * @LastEditTime: 2020-03-11 11:48:45
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -14,12 +14,10 @@
 <script>
 import store from './store'
 import router from './router'
-import { getNode, getPost } from '@/api/nodeTest'
 export default {
   name: 'App',
   created() {
     this.getRouter()
-    this.getNodeTest()
   },
   mounted() {
 
@@ -34,14 +32,6 @@ export default {
       }).catch(reson => {
         console.error(reson + '1')
         throw reson
-      })
-    },
-    getNodeTest() {
-      getNode({ id: 1 }).then(res => {
-        console.log(res)
-      })
-      getPost({ id: 1 }).then(res => {
-        console.log(res)
       })
     }
   }

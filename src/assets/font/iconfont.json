@@ -6,6 +6,34 @@
   "description": "博客图标",
   "glyphs": [
     {
+      "icon_id": "9402959",
+      "name": "眼睛",
+      "font_class": "changyongicon-",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "9113020",
+      "name": "笔记",
+      "font_class": "tubiao-",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "7549350",
+      "name": "用户",
+      "font_class": "RectangleCopy",
+      "unicode": "e6a3",
+      "unicode_decimal": 59043
+    },
+    {
+      "icon_id": "7733536",
+      "name": "预约",
+      "font_class": "RectangleCopy1",
+      "unicode": "e6ed",
+      "unicode_decimal": 59117
+    },
+    {
       "icon_id": "11726797",
       "name": "github",
       "font_class": "github",

@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-30 09:31:42
- * @LastEditTime : 2019-12-30 16:09:07
- * @LastEditors  : Please set LastEditors
+ * @LastEditTime: 2020-03-11 11:51:12
+ * @LastEditors: Please set LastEditors
  */
 import request from '@/utils/request'
 // import qs from 'qs'
@@ -20,8 +20,9 @@ export function login(params) {
 
 export function getInfo() {
   return request({
-    url: '/Accounts/Profile',
-    method: 'get'
+    url: '/blog/getInfo',
+    method: 'get',
+    params: { id: 1 }
   })
 }
 

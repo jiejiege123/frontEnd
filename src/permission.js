@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-30 09:31:42
- * @LastEditTime : 2020-01-17 09:11:04
- * @LastEditors  : Please set LastEditors
+ * @LastEditTime: 2020-03-11 12:11:03
+ * @LastEditors: Please set LastEditors
  */
 import router from './router'
 import store from './store'
@@ -28,9 +28,28 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   // const hasToken = getToken()
-  next()
-  NProgress.done()
-
+  // next()
+  // NProgress.done()
+  const hasGetUserInfo = store.getters.userInfo
+  if (hasGetUserInfo) {
+    next()
+    NProgress.done()
+  } else {
+    try {
+      store.dispatch('user/getInfo').then(userInfo => {
+        console.log(userInfo)
+        const toPath = localStorage.getItem('router')
+        next({ path: toPath || '/' })
+        NProgress.done()
+      }).catch(reson => {
+        console.error(reson)
+        NProgress.done()
+      })
+    } catch (error) {
+      NProgress.done()
+      console.error(error)
+    }
+  }
   // if (hasToken) {
   //   if (to.path === '/login') {
   //   // if is logged in, redirect to the home page
