@@ -37,7 +37,6 @@ router.beforeEach(async(to, from, next) => {
   } else {
     try {
       store.dispatch('user/getInfo').then(userInfo => {
-        console.log(userInfo)
         const toPath = localStorage.getItem('router')
         next({ path: toPath || '/' })
         NProgress.done()

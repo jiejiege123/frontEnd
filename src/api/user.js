@@ -18,25 +18,10 @@ export function login(params) {
   })
 }
 
-export function getInfo() {
-  return request({
-    url: '/blog/getInfo',
-    method: 'get',
-    params: { id: 1 }
-  })
-}
-
 export function logout() {
   return request({
     url: '/user/logout',
     method: 'post'
-  })
-}
-
-export function getRouter() {
-  return request({
-    url: '/Home/GetClientsDataJson',
-    method: 'get'
   })
 }
 
@@ -71,6 +56,23 @@ export function changePassword(data) {
 export function getSystemInfo() {
   return request({
     url: '/Accounts/GetSystemInfo',
+    method: 'get'
+  })
+}
+
+// 接口开始
+export function getInfo() {
+  return request({
+    url: '/blog/getInfo',
+    method: 'get',
+    params: { id: 1 }
+  })
+}
+
+
+export function getRouter() {
+  return request({
+    url: '/Home/GetClientsDataJson',
     method: 'get'
   })
 }
