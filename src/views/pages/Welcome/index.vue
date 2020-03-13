@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-17 23:54:33
- * @LastEditTime: 2020-03-11 10:18:52
+ * @LastEditTime: 2020-03-13 11:11:57
  * @LastEditors: Please set LastEditors
  -->
 <template lang="pug">
@@ -46,11 +46,10 @@ import { mapGetters } from 'vuex'
 import RightWarp from '@/components/RightWarp'
 import ImageDialog from '@/components/ImageDialog'
 import hljs from 'highlight.js/lib/highlight'
-window.hljs = hljs
-console.log(window.hljs)
+
 import javascript from 'highlight.js/lib/languages/javascript'
 import 'highlight.js/styles/monokai.css'
-import 'highlightjs-line-numbers.js/src/highlightjs-line-numbers.js'
+// import { highlightLineNumber } from '@/utils/highlight-line-number'
 export default {
   name: 'Index',
   components: {
@@ -86,62 +85,18 @@ export default {
   },
   created() {
     this.getDataList()
+    window.hljs = hljs
+    require('@/utils/highlightjs-line-numbers')
+    // require('highlightjs-line-numbers.js/src/highlightjs-line-numbers.js') // 官方queryAll() 值不正确
   },
   mounted() {
-    // setTimeout(() => {
-    //   const preEl = document.querySelectorAll('p code')
-    //   console.log(preEl)
-    //   preEl.forEach((el) => {
-    //     hljs.highlightBlock(el)
-    //   })
-    // }, 200)
-    // hljs.initHighlightingOnLoad()
-    // hljs.initLineNumbersOnLoad()
-    // require('highlightjs-line-numbers.js/src/highlightjs-line-numbers.js')
-    // hljs.initLineNumbersOnLoad()
+
+  },
+  updated() {
+    hljs.initHighlightingOnLoad()
+    hljs.initLineNumbersOnLoad()
+    // highlightLineNumber()
     hljs.registerLanguage('javascript', javascript)
-    // (function(window, document) {
-    //   // 创建行号样式
-    //   function createLineNumbersStyle() {
-    //     var lineNumbersStyle = [
-    //       '.{0} ul {',
-    //       'list-style: decimal;',
-    //       'margin: 0px 0px 0 40px !important;',
-    //       'padding: 0px;}',
-    //       '.{0} ul li {',
-    //       'list-style: decimal;',
-    //       'border-left: 1px solid #ddd !important;',
-    //       'padding: 5px!important;',
-    //       'margin: 0 !important;',
-    //       'line-height: 14px;',
-    //       'word-break: break-all;',
-    //       'word-wrap: break-word;}'
-    //     ]
-    //     var styleEl = document.createElement('style')
-    //     styleEl.type = 'text/css'
-    //     styleEl.innerHTML = lineNumbersStyle.join('').format('hljs')
-    //     document.getElementsByTagName('head')[0].appendChild(styleEl)
-    //   }
-    //   // 初始化代码行号
-    //   function initLineNumbersOnLoad() {
-    //     createLineNumbersStyle()
-    //     var codeList = document.querySelectorAll('pre code')
-    //     var block = {}
-    //     for (var i = 0; i < codeList.length; i++) {
-    //       var codeHtml = codeList[i].innerHTML
-    //       codeHtml = '<ul><li>' + codeHtml.replace(/\n/g, '\n</li><li>') + '\n</li></ul>'
-    //       codeList[i].innerHTML = codeHtml
-    //     }
-    //   }
-    //   if (window.hljs) {
-    //     window.hljs.initLineNumbersOnLoad = initLineNumbersOnLoad
-    //   } else {
-    //     window.console.error('highlight.js not find!')
-    //   }
-    // })(window, document)
-    // window.onload = function() {
-    //   hljs.initLineNumbersOnLoad()
-    // }
   },
   methods: {
     /** *** 通用 start *** **/
@@ -154,7 +109,7 @@ export default {
     /** *** 获取数据 end *** **/
     getDataList() {
       getArticle().then(res => {
-        console.log(res)
+        // console.log(res)
         this.articleHtml = res.Data
       })
     }
