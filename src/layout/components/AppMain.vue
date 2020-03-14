@@ -32,8 +32,9 @@ export default {
 }
 
 .fixed-header+.app-main {
-  padding-top: 50px;
-  height: 100vh;
+  // padding-top: 50px;
+  // height: 100vh;
+  margin-top: 50px;
   overflow: auto;
   overflow-x: hidden !important;
 }

@@ -102,7 +102,7 @@
       .blog-info
         .blog-info-title.mb_10 标签云
         span.tag.mr_10(v-for="(item,index) in tagList" :key="index")  {{item}}
-
+      slot
 
   //- right-warp.right-warp
 </template>
@@ -186,6 +186,9 @@ $setcolor: #777;
   }
   /deep/ .el-tabs__header{
     margin-bottom: 0
+  }
+  /deep/ .el-tabs__content{
+    position: relative;
   }
   /deep/ .el-tabs__nav-wrap{
     border-color: #a5acad;

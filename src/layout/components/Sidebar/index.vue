@@ -79,7 +79,7 @@ export default {
     //   return this.$router.options.routes
     // },
     routeSingle() {
-      console.log(this.routes)
+      // console.log(this.routes)
       return this.routes.filter(n => n.up === true)
     },
     routeMultiple() {

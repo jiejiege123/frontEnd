@@ -25,6 +25,8 @@ import '@/permission' // permission control
 // import VueSocketIO from 'vue-socket.io'
 // import '@/assets/font-awesome/css/font-awesome.css'
 import '@/assets/font/iconfont.css'
+import '@/assets/css/articleoutline.css'
+import '@/assets/css/autoc.css'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

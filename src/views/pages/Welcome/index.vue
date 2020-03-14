@@ -6,7 +6,7 @@
  * @LastEditors: Please set LastEditors
  -->
 <template lang="pug">
-.index.layout-row
+.index.layout-row#layScroll
   .content-warp.flex1
     .warp-header
       h1.title(style='') {{article.title}}
@@ -31,13 +31,14 @@
           span {{article.info.type}}
     .article-warp
       //- 文章类容
-      div.article-content(v-html="articleHtml" :class="{'article-p-code': true}")
+      div.article-content#article(v-html="articleHtml" :class="{'article-p-code': true}")
       //- div adfasdfasdfasdfaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxsdfasdf
       //- div adfasdfasdfasdfaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxsdfasdf
       div.article-footer.layout-row.align-center.mt_30.mb_40
         i(class='icon iconfont iconRectangleCopy1')
         span 最后修改： {{article.info.timestamp}}
   right-warp.right-warp
+    .catalog#catalog(ref="catalog" :class="headerFixed?'isFixed':''")
 </template>
 
 <script >
@@ -50,6 +51,8 @@ import hljs from 'highlight.js/lib/highlight'
 import javascript from 'highlight.js/lib/languages/javascript'
 import 'highlight.js/styles/monokai.css'
 // import { highlightLineNumber } from '@/utils/highlight-line-number'
+
+// import '@/utils/gumshoe.js'
 export default {
   name: 'Index',
   components: {
@@ -74,7 +77,11 @@ export default {
           type: 'js'
         }
       },
-      articleHtml: ''
+      articleHtml: '',
+      offsetTop: '',
+      offsetHeight: '',
+      headerFixed: false,
+      activeStep: 0
     }
   },
   computed: {
@@ -90,13 +97,26 @@ export default {
     // require('highlightjs-line-numbers.js/src/highlightjs-line-numbers.js') // 官方queryAll() 值不正确
   },
   mounted() {
-
+    // 目录吸顶监听滚动
+    window.addEventListener('scroll', this.handleScroll)
   },
   updated() {
-    hljs.initHighlightingOnLoad()
-    hljs.initLineNumbersOnLoad()
-    // highlightLineNumber()
-    hljs.registerLanguage('javascript', javascript)
+    if (document.querySelectorAll('.outline-inside').length === 0) {
+      // 生成高亮
+      hljs.initHighlightingOnLoad()
+      hljs.initLineNumbersOnLoad()
+      // highlightLineNumber()
+      // 代码行号
+      hljs.registerLanguage('javascript', javascript)
+      // 生成目录
+      this.creatTag()
+      // new Gumshoe('#my-awesome-nav a')
+      // 获取目录高度
+      this.getTagHigh()
+    }
+  },
+  deforeDestroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     /** *** 通用 start *** **/
@@ -105,11 +125,126 @@ export default {
 
 
     /** *** 按钮操作 start *** **/
+    creatTag() {
+      const AutocJs = require('@/utils/autoc.js')
+      const that = this
+      // 创建 Outline 实例
+      const navigation = new AutocJs({
+        // 文章正文 DOM 节点的 ID 选择器
+        article: '#article',
+        // 要收集的标题选择器
+        selector: 'h1,h2,h3,h4,h5,h6',
+        // 侧边栏导航的标题
+        title: '文章导读',
+        // 文章导读导航的位置
+        // outside - 以侧边栏菜单形式显示（默认值）
+        // inside - 在文章正文一开始的地方显示
+        position: 'inside',
+        // 标题图标链接的 URL 地址
+        // （默认）没有设置定制，点击链接页面滚动到标题位置
+        // 设置了链接地址，则不会滚动定位
+        anchorURL: '',
+        // 链接的显示位置
+        // front - 在标题最前面（默认值）
+        // back - 在标题后面
+        anchorAt: 'front',
+        // 是否生成文章导读导航
+        isGenerateOutline: true,
+        // 是否在文章导读导航中显示段落章节编号
+        isGenerateOutlineChapterCode: true,
+        // 是否在正文的文章标题中显示段落章节编号
+        isGenerateHeadingChapterCode: false,
+        // 是否在正文的文章标题中创建锚点
+        isGenerateHeadingAnchor: true
+      })
+      // 锚点问题
+      document.querySelectorAll('.outline-inside .outline-link').forEach((el, index) => {
+        el.addEventListener('click', function(e) {
+          // 锚点滚动
+          // 获取需要滚动的距离
+          // const href = el.getAttribute('href')
+          // const offsetTop = document.querySelector(href).offsetTop
+          // const total = offsetTop
+          // // 计算每小段距离
+          // let step = total / 50
+          // let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+          // if (total > scrollTop) {
+          //   smoothDown()
+          // } else {
+          //   const newTotal = scrollTop - total
+          //   step = newTotal / 50
+          //   smoothUp()
+          // }
+          // function smoothDown() {
+          //   if (scrollTop < total) {
+          //     scrollTop += step
+          //     document.body.scrollTop = scrollTop
+          //     document.documentElement.scrollTop = scrollTop
+          //     window.pageYOffset = scrollTop
+          //     setTimeout(smoothDown, 10)
+          //   } else {
+          //     document.body.scrollTop = total
+          //     document.documentElement.scrollTop = total
+          //     window.pageYOffset = total
+          //   }
+          // }
+          // function smoothUp() {
+          //   if (scrollTop > total) {
+          //     scrollTop -= step
+          //     document.body.scrollTop = scrollTop
+          //     document.documentElement.scrollTop = scrollTop
+          //     window.pageYOffset = scrollTop
+          //     setTimeout(smoothUp, 10)
+          //   } else {
+          //     document.body.scrollTop = total
+          //     document.documentElement.scrollTop = total
+          //     window.pageYOffset = total
+          //   }
+          // }
+          // document.getElementById(el.getAttribute('rel')).scrollIntoView()
+          that.activeStep = index
+          console.log(that.activeStep)
+          that.setActiveTag()
+        })
+      })
+      this.setActiveTag()
+    },
+    setActiveTag() {
+      // 设置样式
+      console.log(document.querySelectorAll('.outline-inside .outline-link'))
+      document.querySelectorAll('.outline-inside .outline-link').forEach(e => {
+        e.parentNode.classList.remove('is-clicked')
+        e.classList.remove('is-clicked-a')
+      })
+      document.querySelectorAll('.outline-inside .outline-link')[this.activeStep].parentNode.classList.add('is-clicked')
+      document.querySelectorAll('.outline-inside .outline-link')[this.activeStep].classList.add('is-clicked-a')
+    },
+    getTagHigh() {
+      const header = document.querySelector('.catalog')
+      // 这里要得到top的距离和元素自身的高度
+      this.offsetTop = header.offsetTop
+      this.offsetHeight = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop // 滚动条偏移量
+      this.offsetWidth = header.offsetWidth
+      this.headerFixed = this.offsetWidth > this.offsetTop
+    },
+    handleScroll() {
+      // 得到页面滚动的距离
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop // 滚动条偏移量
+      // 判断页面滚动的距离是否大于吸顶元素的位置
+      this.headerFixed = scrollTop > this.offsetTop
 
+      // 滚动监听
+      document.querySelectorAll('.outline-heading').forEach((el, index) => {
+        console.log(el.offsetTop)
+        if (scrollTop >= el.offsetTop) {
+          this.activeStep = index
+          this.setActiveTag()
+        }
+      })
+    },
     /** *** 获取数据 end *** **/
     getDataList() {
       getArticle().then(res => {
-        // console.log(res)
         this.articleHtml = res.Data
       })
     }
@@ -127,7 +262,7 @@ $titleBackgroundC: #F9F9F9;
 $arctilBgc:#fff;
 $articleColor: #333;
 .index{
-  min-height: 100%;
+  height: 100%;
   background: $indexBackgroundC
 }
 .content-warp{
@@ -186,8 +321,16 @@ $articleColor: #333;
     line-height: 1.2 !important
   }
 }
+.isFixed{
+  position: fixed;
+  top: 50px;
+  right: 0px;
+  width: 240px;
+}
+
 
 </style>
+
 <style lang="scss">
 .article-p-code{
   p{
@@ -202,5 +345,22 @@ $articleColor: #333;
       // border-radius: 1px;
     }
   }
+}
+.catalog{
+  padding: 0 15px;
+  background: #fff;
+  color: #777;
+}
+.outline-link{
+  color: #777 !important;
+}
+.outline-link:hover{
+  color: #409EFF !important;
+}
+.is-clicked{
+  background: #f5f5f5
+}
+.is-clicked-a{
+  color: #000 !important;
 }
 </style>
