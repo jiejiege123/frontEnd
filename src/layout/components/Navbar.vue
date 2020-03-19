@@ -11,11 +11,11 @@
             {{ userLy }}
           </span> -->
           <span>
-            小可爱
+            {{ userInfo.userName }}
           </span>
-          <i class="el-icon-caret-bottom" />
+          <!-- <i class="el-icon-caret-bottom" /> -->
         </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
+        <!-- <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
               主页
@@ -30,7 +30,7 @@
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出</span>
           </el-dropdown-item>
-        </el-dropdown-menu>
+        </el-dropdown-menu> -->
       </el-dropdown>
     </div>
     <el-dialog

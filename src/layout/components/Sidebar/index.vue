@@ -69,6 +69,12 @@ export default {
   //     // return process.env.VUE_APP_BASE_API + val
   //   }
   // },
+  data() {
+    return {
+      circleUrl: require('@/assets/image/header.jpg'),
+      home: {}
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
@@ -79,11 +85,11 @@ export default {
     //   return this.$router.options.routes
     // },
     routeSingle() {
-      // console.log(this.routes)
-      return this.routes.filter(n => n.up === true)
+      // this.$router.options.routes.find(n => n.path === '/')
+      return this.$router.options.routes.filter(n => !n.hidden && !n.up)
     },
     routeMultiple() {
-      return this.routes.filter(n => n.up === false)
+      return this.routes.filter(n => n.up === true)
     },
     activeMenu() {
       const route = this.$route
@@ -103,6 +109,10 @@ export default {
     isCollapse() {
       return !this.sidebar.opened
     }
+  },
+  created() {
+  },
+  mounted() {
   }
 }
 </script>

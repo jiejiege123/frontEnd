@@ -6,48 +6,43 @@
  * @LastEditors: Please set LastEditors
  -->
 <template lang="pug">
-.index.layout-row#layScroll
-  .content-warp.flex1
-    //- .warp-header
-    //-   h1.title(style='') {{article.title}}
-    //-   .article-info.layout-row__center.align-center(:class="{'article-p-code': true}")
-    //-     .span-warp
-    //-       i(class='icon iconfont iconRectangleCopy')
-    //-       span {{article.info.author}}
-    //-     .span-warp
-    //-       i(class='icon iconfont iconRectangleCopy1')
-    //-       span {{article.info.time}}
-    //-     .span-warp
-    //-       i(class='icon iconfont iconchangyongicon-')
-    //-       span {{article.info.views}}次浏览
-    //-     .span-warp
-    //-       i(class='icon iconfont iconrespond')
-    //-       span {{article.info.comment}}条评论
-    //-     .span-warp
-    //-       i(class='icon iconfont icontubiao-')
-    //-       span {{article.info.wordNumber}}字数
-    //-     .span-warp
-    //-       span #
-    //-       span {{article.info.type}}
-    .article-warp
-      //- 文章类容
-      div.article-content#article(v-html="articleHtml" :class="{'article-p-code': true}")
-      //- div adfasdfasdfasdfaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxsdfasdf
-      //- div adfasdfasdfasdfaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxsdfasdf
-      div.article-footer.layout-row.align-center.mt_30.mb_40
-        i(class='icon iconfont iconRectangleCopy1')
-        span 最后修改： {{article.info.timestamp}}
+router-view(v-if="$route.fullPath.includes('detail')")
+.index.layout-row#layScroll(v-else)
+  .content-warp.flex1(v-loading="loading")
+    .article-warp(v-for="(item,index) in dataList" :key="index")
+      h1.title.mb_15(@click="goPost(item)") {{item.title}}
+      div.article-content#article(
+        v-html="item.abstract || '暂时无可提供的摘要'"
+        :class="{'article-p-code': true}"
+        @click="")
+      //- .cut-line
+      .article-info.layout-row.align-center(:class="{'article-p-code': true}")
+        .span-warp
+          i(class='icon iconfont iconRectangleCopy')
+          span {{item.author}}
+        .span-warp
+          i(class='icon iconfont iconRectangleCopy1')
+          span {{item.updateTime}}
+    .pages
+      el-pagination(
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :page-sizes="[20, 50, 100, 200]"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total")
   right-warp.right-warp
-    .catalog#catalog(ref="catalog" :class="headerFixed?'isFixed':''")
+    //- .catalog#catalog(ref="catalog" :class="headerFixed?'isFixed':''")
 </template>
 
 <script >
-import { getArticle } from '@/api/index'
+import { getArticleList } from '@/api/index'
 import { mapGetters } from 'vuex'
 import RightWarp from '@/components/RightWarp'
 import ImageDialog from '@/components/ImageDialog'
 import hljs from 'highlight.js/lib/highlight'
-
+import { getUrlKey } from '@/utils'
 import javascript from 'highlight.js/lib/languages/javascript'
 import 'highlight.js/styles/monokai.css'
 // import { highlightLineNumber } from '@/utils/highlight-line-number'
@@ -81,46 +76,74 @@ export default {
       offsetTop: '',
       offsetHeight: '',
       headerFixed: false,
-      activeStep: 0
+      activeStep: 0,
+      total: 1,
+      currentPage: 1,
+      pageSize: 20,
+      dataList: [],
+      loading: false
     }
   },
   computed: {
-    ...mapGetters(['userInfo']),
+    ...mapGetters(['userInfo', 'tags', 'cags', 'tagId']),
     action() {
       return `${process.env.VUE_APP_BASE_API}/Basic/UploadImage`
     }
   },
+  watch: {
+    tagId(news) {
+      this.getDataList()
+    }
+  },
   created() {
-    // this.getDataList()
+    if (!this.$route.fullPath.includes('detail')) {
+      // const id = getUrlKey('id', window.location.href)
+      // if (id) {
+      //   localStorage.setItem('worderId', id)
+      // } else {
+      //   id = localStorage.getItem('worderId')
+      // }
+      // this.tagId = id
+
+      this.getDataList()
+    }
+    // 判断是哪个路由
     window.hljs = hljs
-    require('@/utils/highlightjs-line-numbers')
+    // require('@/utils/highlightjs-line-numbers')
     // require('highlightjs-line-numbers.js/src/highlightjs-line-numbers.js') // 官方queryAll() 值不正确
   },
   mounted() {
     // 目录吸顶监听滚动
-    window.addEventListener('scroll', this.handleScroll)
+    // window.addEventListener('scroll', this.handleScroll)
   },
   updated() {
-    if (document.querySelectorAll('.outline-inside').length === 0) {
-      // 生成高亮
-      hljs.initHighlightingOnLoad()
-      hljs.initLineNumbersOnLoad()
-      // highlightLineNumber()
-      // 代码行号
-      hljs.registerLanguage('javascript', javascript)
-      // 生成目录
-      this.creatTag()
-      // new Gumshoe('#my-awesome-nav a')
-      // 获取目录高度
-      this.getTagHigh()
-    }
+    // if (document.querySelectorAll('.outline-inside').length === 0) {
+    //   // 生成高亮
+    //   hljs.initHighlightingOnLoad()
+    //   hljs.initLineNumbersOnLoad()
+    //   // highlightLineNumber()
+    //   // 代码行号
+    //   hljs.registerLanguage('javascript', javascript)
+    //   // 生成目录
+    //   // this.creatTag()
+    //   // // new Gumshoe('#my-awesome-nav a')
+    //   // // 获取目录高度
+    //   // this.getTagHigh()
+    // }
   },
   deforeDestroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
+    // window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     /** *** 通用 start *** **/
-
+    handleCurrentChange(e) {
+      this.currentPage = e
+      this.getDataList()
+    },
+    handleSizeChange(e) {
+      this.pageSize = e
+      this.getDataList()
+    },
     /** *** 通用 end *** **/
 
 
@@ -203,7 +226,6 @@ export default {
           // }
           // document.getElementById(el.getAttribute('rel')).scrollIntoView()
           that.activeStep = index
-          console.log(that.activeStep)
           that.setActiveTag()
         })
       })
@@ -211,7 +233,6 @@ export default {
     },
     setActiveTag() {
       // 设置样式
-      console.log(document.querySelectorAll('.outline-inside .outline-link'))
       document.querySelectorAll('.outline-inside .outline-link').forEach(e => {
         e.parentNode.classList.remove('is-clicked')
         e.classList.remove('is-clicked-a')
@@ -235,17 +256,121 @@ export default {
 
       // 滚动监听
       document.querySelectorAll('.outline-heading').forEach((el, index) => {
-        console.log(el.offsetTop)
         if (scrollTop >= el.offsetTop) {
           this.activeStep = index
           this.setActiveTag()
         }
       })
     },
+    goPost(item) {
+      // const routes = this.$router.options.routes
+      // const topRouter = routes.find(n => n.path.split('/')[1] === this.$route.fullPath.split('/')[1])
+      // console.log(topRouter)
+      // console.log(this.$route.fullPath)
+      // for (let i = 0; i < topRouter.children.length; i++) {
+      //   const n = topRouter.children[i]
+      //   if (topRouter.path + '/' + n.path === this.$route.fullPath) {
+      //     // 判断是否有detail路由
+      //     if (n.children && n.children.findIndex(j => j.path === 'detail') >= 0) {
+      //       const chid = n.children.findIndex(j => j.path === 'detail')
+      //       n.children[chid] = {
+      //         path: 'detail',
+      //         name: n.name + i,
+      //         hidden: true,
+      //         component: (res) => require([`@/views/pages/Post/PageDtl/index.vue`], res),
+      //         meta: { title: item.title }
+      //       }
+      //     } else {
+      //       if (!n.children) {
+      //         n.children = []
+      //       }
+      //       n.children.push(
+      //         {
+      //           path: 'detail',
+      //           name: n.name + i,
+      //           hidden: true,
+      //           component: (res) => require([`@/views/pages/Post/PageDtl/index.vue`], res),
+      //           meta: { title: item.title }
+      //         }
+      //       )
+      //     }
+      //     break
+      //   } else {
+      //     for (let index = 0; index < n.children.length; index++) {
+      //       const e = n.children[index]
+      //       if (topRouter.path + '/' + n.path + '/' + e.path === this.$route.fullPath) {
+      //         if (e.children && e.children.findIndex(j => j.path === 'detail') >= 0) {
+      //           const cid = e.children.findIndex(j => j.path === 'detail')
+      //           e.children[cid] = {
+      //             path: 'detail',
+      //             name: e.name + index,
+      //             hidden: true,
+      //             component: (res) => require([`@/views/pages/Post/PageDtl/index.vue`], res),
+      //             meta: { title: item.title }
+      //           }
+      //         } else {
+      //           if (!e.children) {
+      //             e.children = []
+      //           }
+      //           e.children.push(
+      //             {
+      //               path: 'detail',
+      //               name: e.name + index,
+      //               hidden: true,
+      //               component: (res) => require([`@/views/pages/Post/PageDtl/index.vue`], res),
+      //               meta: { title: item.title }
+      //             }
+      //           )
+      //         }
+      //         break
+      //       }
+      //     }
+      //   }
+      // }
+      // console.log(topRouter)
+      // // this.$store.commit('permission/SET_ROUTES', routes)
+      // this.$router.options.routes = routes
+      // this.$router.addRoutes(routes)
+      // if (this.$route.fullPath.includes('tag')) {
+      //   this.$router.push({
+      //     path: `${this.$route.fullPath.split('?')[0]}/detail?id=${item.id}`
+      //   })
+      // } else {
+      //   this.$router.push({
+      //     path: `${this.$route.fullPath}/detail?id=${item.id}`
+      //   })
+      // }
+      this.$router.push({
+        path: `${this.$route.fullPath}/detail?id=${item.id}`
+      })
+    },
     /** *** 获取数据 end *** **/
     getDataList() {
-      getArticle().then(res => {
-        this.articleHtml = res.Data
+      // 判断路由 首页
+      const params = {
+        page: this.currentPage,
+        pageSize: this.pageSize,
+        keyword: '',
+        tags: '',
+        categories: ''
+      }
+      const fullPath = this.$route.fullPath.split('/')
+      if (fullPath[1] === 'Page') {
+        params.categories = this.cags.find(n => n.eName === fullPath[fullPath.length - 1]).id
+      }
+      if (this.$route.fullPath.includes('tag')) {
+        params.tags = localStorage.getItem('tagId')
+      }
+      this.loading = true
+      getArticleList(params).then(res => {
+        this.$nextTick(() => {
+          this.loading = false
+        })
+        this.dataList = res.Data.data
+        this.total = res.Data.total
+      }).catch(err => {
+        this.loading = false
+        console.error(err)
       })
     }
 
@@ -274,16 +399,20 @@ $articleColor: #333;
 
 }
 .title{
-  font-weight: 300;
+  font-weight: 400;
   font-size:30px;
-  text-align:center;
-  margin:0;
-  line-height: 40px;
+  text-align:left;
+  cursor: pointer;
+  // margin:0;
+  margin-top: 0;
+  font-size: 22px;
+  color: #555;
+  // line-height: 40px;
 }
 .article-info{
   color: $articleInfoColor;
   font-size: 13px;
-  margin-top: 10px;
+  margin-top: 15px;
   .span-warp{
     display: flex;
     align-items: center;
@@ -312,9 +441,20 @@ $articleColor: #333;
 .right-warp{
   width: 240px
 }
+.cut-line{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+  height: 1px;
+  background: #d1d1d1;
+  overflow: hidden;
+  font-size: 0;
+}
 .article-content{
-  color: $articleColor;
+  color: #777;
   font-size: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #d1d1d1;
   font: 87.5%/1.2 -apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif;
   line-height: 1.5;
   h1{
@@ -362,5 +502,9 @@ $articleColor: #333;
 }
 .is-clicked-a{
   color: #000 !important;
+}
+.pages{
+  text-align: center;
+  margin-bottom: 25px;
 }
 </style>

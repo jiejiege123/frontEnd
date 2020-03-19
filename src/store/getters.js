@@ -18,6 +18,11 @@ const getters = {
   routes: state => state.permission.routes,
   finishtip: state => state.user.finishtip,
   verifyFlag: state => state.user.verifyFlag,
-  loading: state => state.user.loading
+  loading: state => state.user.loading,
+  tags: state => state.user.tags,
+  cags: state => state.user.cags,
+  article: state => state.user.article,
+  total: state => state.user.total,
+  tagId: state => state.user.tagId
 }
 export default getters

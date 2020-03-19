@@ -8,27 +8,27 @@
 <template lang="pug">
 .index.layout-row#layScroll
   .content-warp.flex1
-    //- .warp-header
-    //-   h1.title(style='') {{article.title}}
-    //-   .article-info.layout-row__center.align-center(:class="{'article-p-code': true}")
-    //-     .span-warp
-    //-       i(class='icon iconfont iconRectangleCopy')
-    //-       span {{article.info.author}}
-    //-     .span-warp
-    //-       i(class='icon iconfont iconRectangleCopy1')
-    //-       span {{article.info.time}}
-    //-     .span-warp
-    //-       i(class='icon iconfont iconchangyongicon-')
-    //-       span {{article.info.views}}次浏览
-    //-     .span-warp
-    //-       i(class='icon iconfont iconrespond')
-    //-       span {{article.info.comment}}条评论
-    //-     .span-warp
-    //-       i(class='icon iconfont icontubiao-')
-    //-       span {{article.info.wordNumber}}字数
-    //-     .span-warp
-    //-       span #
-    //-       span {{article.info.type}}
+    .warp-header
+      h1.title(style='') {{article.title}}
+      .article-info.layout-row__center.align-center(:class="{'article-p-code': true}")
+        .span-warp
+          i(class='icon iconfont iconRectangleCopy')
+          span {{article.info.author}}
+        .span-warp
+          i(class='icon iconfont iconRectangleCopy1')
+          span {{article.info.time}}
+        .span-warp
+          i(class='icon iconfont iconchangyongicon-')
+          span {{article.info.views}}次浏览
+        .span-warp
+          i(class='icon iconfont iconrespond')
+          span {{article.info.comment}}条评论
+        .span-warp
+          i(class='icon iconfont icontubiao-')
+          span {{article.info.wordNumber}}字数
+        .span-warp
+          span #
+          span {{article.info.type}}
     .article-warp
       //- 文章类容
       div.article-content#article(v-html="articleHtml" :class="{'article-p-code': true}")

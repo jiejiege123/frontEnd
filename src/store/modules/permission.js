@@ -61,41 +61,93 @@ const actions = {
       // 将数组写成路由标准路由格式
       routers.map(n => {
         const childrenComponents = []
-        n.Children = n.Children || []
-        n.Children.map(nC => {
+        n.children = n.children || []
+        n.children.map(nC => {
+          const ccComponents = []
+          if (nC.children) {
+            nC.children.forEach(nCc => {
+              let cComp
+              try { cComp = require(`@/views/pages/${n.url}/${nC.url}/index.vue`) } catch (e) {
+                console.log(e)
+              }
+              if (cComp && cComp.default) {
+                ccComponents.push(
+                  {
+                    path: `${nCc.eName}`,
+                    name: 'nc' + nC.id + nCc.eName,
+                    component: (res) => require([`@/views/pages/${n.url}/${nC.url}/index.vue`], res),
+                    // component: () => import(`@/views/pages/${n.url}/${nC.url}/index.vue`),
+                    meta: { title: nCc.name },
+                    children: [
+                      {
+                        path: 'detail',
+                        name: 'nc' + nC.id + nCc.eName,
+                        hidden: true,
+                        component: (res) => require([`@/views/pages/Post/PageDtl/index.vue`], res),
+                        meta: { title: '正文' }
+                      }
+                    ]
+                  }
+                )
+              } else {
+                ccComponents.push(
+                  {
+                    path: `${nCc.eName}`,
+                    name: 'nc' + nC.id + nCc.eName,
+                    component: view404,
+                    meta: { title: nCc.name }
+                  }
+                )
+              }
+            })
+          }
           let comp
-          try { comp = require(`@/views/pages/${n.Url}/${nC.Url}/index.vue`) } catch (e) {
+          try { comp = require(`@/views/pages/${n.url}/${nC.url}/index.vue`) } catch (e) {
             console.log(e)
           }
+
           if (comp && comp.default) {
+            ccComponents.push(
+              {
+                path: 'detail',
+                name: 'nc' + nC.id + nC.eName,
+                hidden: true,
+                component: (res) => require([`@/views/pages/Post/PageDtl/index.vue`], res),
+                meta: { title: '正文' }
+              }
+            )
             childrenComponents.push(
               {
-                path: nC.Url,
-                name: 'nc' + nC.Id,
-                component: (res) => require([`@/views/pages/${n.Url}/${nC.Url}/index.vue`], res),
-                // component: () => import(`@/views/pages/${n.Url}/${nC.Url}/index.vue`),
-                meta: { title: nC.Name }
+                path: `${nC.url}/${nC.eName}`,
+                name: 'nc' + nC.id,
+                alwaysShow: false,
+                component: (res) => require([`@/views/pages/${n.url}/${nC.url}/index.vue`], res),
+                // component: () => import(`@/views/pages/${n.url}/${nC.url}/index.vue`),
+                meta: { title: nC.name },
+                children: ccComponents
               }
             )
           } else {
             childrenComponents.push(
               {
-                path: nC.Url,
-                name: 'nc' + nC.Id,
+                path: `${nC.url}/${nC.eName}`,
+                alwaysShow: false,
+                name: 'nc' + nC.id,
                 component: view404,
-                meta: { title: nC.Name }
+                meta: { title: nC.name },
+                children: ccComponents
               }
             )
           }
         })
         addRoutes.push(
           {
-            path: `/${n.Url}`,
+            path: `/${n.url}`,
             alwaysShow: false,
             component: Layout,
-            redirect: `/${n.Url}/${n.Children[0].Url}`,
-            name: 'c' + n.Id,
-            meta: { title: n.Name, aicon: n.Icon },
+            redirect: `/${n.url}/${n.children[0].url}/${n.children[0].eName}`,
+            name: 'c' + n.id,
+            meta: { title: n.name, aicon: n.icon },
             up: n.up,
             children: childrenComponents
           }

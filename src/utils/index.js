@@ -335,7 +335,7 @@ export function listToTree(data) {
  * @param {type} ''
  * @return: ''
  */
-export function toTree(data) {
+export function toTree(data, id, pid) {
   // 删除 所有 children,以防止多次调用
   data.forEach(function(item) {
     delete item.children
@@ -344,13 +344,13 @@ export function toTree(data) {
   // 将数据存储为 以 id 为 KEY 的 map 索引数据列
   var map = {}
   data.forEach(function(item) {
-    map[item.Code] = item
+    map[item[id]] = item
   })
   //        console.log(map);
   var val = []
   data.forEach(function(item) {
     // 以当前遍历项，的pid,去map对象中找到索引的id
-    var parent = map[item.PCode]
+    var parent = map[item[pid]]
     // 好绕啊，如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中
     if (parent) {
       (parent.children || (parent.children = [])).push(item)
@@ -428,4 +428,38 @@ export function ptwop(p, type = 'po') {
     return str2
   }
   // console.log(newArr)
+}
+/**
+ * @description: "计算天数"
+ * @param {String}} 'p'
+ * @param {String}} 'type' 转换类型 po: 转换为小数 per: 转换为百分比
+ * @return: ''
+ */
+export function datedifference(sDate1, sDate2) { // sDate1和sDate2是2006-12-18格式
+  var dateSpan,
+    iDays
+  sDate1 = Date.parse(sDate1)
+  sDate2 = Date.parse(sDate2)
+  dateSpan = sDate2 - sDate1
+  dateSpan = Math.abs(dateSpan)
+  iDays = Math.floor(dateSpan / (24 * 3600 * 1000))
+  return iDays
+}
+/**
+ * @description 非路由获取url参数
+ * @param {String} name 参数名
+ * @param {http} url url
+ */
+// 使用方法
+// import { getUrlKey } from '@/utils/index'
+// this.id  = getUrlKey("id ",window.location.href)
+
+// 如果url中参数base64编码
+// let path = window.location.href.split("?") //分割url
+// let href = path[0]+"?"+path[1]
+// let query = Base64.decode(path[1])  //解码
+// href = path[0]+"?"+ query //解码后重组
+// this.id  = getUrlKey("id ",href)
+export function getUrlKey(name, url) {
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(url) || [, ''])[1].replace(/\+/g, '%20')) || null
 }

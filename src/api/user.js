@@ -69,10 +69,11 @@ export function getInfo() {
   })
 }
 
-
+// 获取路由
 export function getRouter() {
   return request({
-    url: '/Home/GetClientsDataJson',
+    url: '/blog/getRouter',
     method: 'get'
   })
 }
+

@@ -12,26 +12,38 @@
 </template>
 
 <script>
-import store from './store'
-import router from './router'
+import { getTags, getArticleOrder, getCategoriesAll } from '@/api/index'
 export default {
   name: 'App',
+  data() {
+    return {
+    }
+  },
+  computed: {
+
+  },
   created() {
-    this.getRouter()
+    this.getBaseData()
   },
   mounted() {
 
   },
   methods: {
-    getRouter() {
-      store.dispatch('user/getRouters').then(res => {
-        store.dispatch('permission/generateRoutes', res).then((res) => {
-          router.addRoutes(res.allRoutes)
-          router.options.routes = res.allRoutes
-        })
-      }).catch(reson => {
-        console.error(reson + '1')
-        throw reson
+    getBaseData() {
+      const param1 = {
+        page: 1,
+        pageSize: 2000,
+        keyword: ''
+      }
+      const param2 = {
+        page: 1,
+        pageSize: 5
+      }
+      Promise.all([getTags(param1), getArticleOrder(param2), getCategoriesAll()]).then(res => {
+        this.$store.commit('user/SET_TAGS', res[0].Data.data)
+        this.$store.commit('user/SET_ARTICLEORDER', res[1].Data)
+        this.$store.commit('user/SET_CAGD', res[2].Data.data)
+        this.$store.commit('user/SET_TOTAL', res[1].Data[2][0].total)
       })
     }
   }
@@ -88,5 +100,8 @@ body  .el-table .warning-row {
 
 body .el-table .success-row {
   background: #f0f9eb;
+}
+.app-main{
+  background: #F0F3F4;
 }
 </style>

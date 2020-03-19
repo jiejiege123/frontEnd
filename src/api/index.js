@@ -7,9 +7,41 @@
  */
 import request from '@/utils/request'
 // import qs from 'qs'
-export function getArticle() {
+export function getArticleList(params) {
+  return request({
+    url: '/blog/getArticleList',
+    method: 'get',
+    params
+  })
+}
+
+export function getArticleById(params) {
   return request({
     url: '/blog/article',
+    method: 'get',
+    params
+  })
+}
+
+export function getTags(params) {
+  return request({
+    url: '/blog/getTags',
+    method: 'get',
+    params
+  })
+}
+
+export function getArticleOrder(params) {
+  return request({
+    url: '/blog/getArticleOrder',
+    method: 'get',
+    params
+  })
+}
+
+export function getCategoriesAll() {
+  return request({
+    url: '/blog/getCategoriesAll',
     method: 'get'
   })
 }

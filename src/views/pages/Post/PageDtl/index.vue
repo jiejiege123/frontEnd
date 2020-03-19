@@ -7,42 +7,42 @@
  -->
 <template lang="pug">
 .index.layout-row#layScroll
-  .content-warp.flex1
-    //- .warp-header
-    //-   h1.title(style='') {{article.title}}
-    //-   .article-info.layout-row__center.align-center(:class="{'article-p-code': true}")
-    //-     .span-warp
-    //-       i(class='icon iconfont iconRectangleCopy')
-    //-       span {{article.info.author}}
-    //-     .span-warp
-    //-       i(class='icon iconfont iconRectangleCopy1')
-    //-       span {{article.info.time}}
-    //-     .span-warp
-    //-       i(class='icon iconfont iconchangyongicon-')
-    //-       span {{article.info.views}}次浏览
-    //-     .span-warp
-    //-       i(class='icon iconfont iconrespond')
-    //-       span {{article.info.comment}}条评论
-    //-     .span-warp
-    //-       i(class='icon iconfont icontubiao-')
-    //-       span {{article.info.wordNumber}}字数
-    //-     .span-warp
-    //-       span #
-    //-       span {{article.info.type}}
+  .content-warp.flex1(v-loading="loading")
+    .warp-header
+      h1.title(style='') {{article.title}}
+      .article-info.layout-row__center.align-center(:class="{'article-p-code': true}")
+        .span-warp
+          i(class='icon iconfont iconRectangleCopy')
+          span {{article.author}}
+        .span-warp
+          i(class='icon iconfont iconRectangleCopy1')
+          span {{article.creatTime}}
+        .span-warp
+          i(class='icon iconfont iconchangyongicon-')
+          span {{article.visits}}次浏览
+        .span-warp
+          i(class='icon iconfont iconrespond')
+          span {{article.commentNums || 0}}条评论
+        .span-warp
+          i(class='icon iconfont icontubiao-')
+          span {{article.md ? article.md.length : 0}}字数
+        .span-warp
+          span #
+          span {{article.categories}}
     .article-warp
       //- 文章类容
-      div.article-content#article(v-html="articleHtml" :class="{'article-p-code': true}")
+      div.article-content#article(v-html="article.body" :class="{'article-p-code': true}")
       //- div adfasdfasdfasdfaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxsdfasdf
       //- div adfasdfasdfasdfaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxsdfasdf
       div.article-footer.layout-row.align-center.mt_30.mb_40
         i(class='icon iconfont iconRectangleCopy1')
-        span 最后修改： {{article.info.timestamp}}
+        span 最后修改： {{article.updateTime}}
   right-warp.right-warp
     .catalog#catalog(ref="catalog" :class="headerFixed?'isFixed':''")
 </template>
 
 <script >
-import { getArticle } from '@/api/index'
+import { getArticleById } from '@/api/index'
 import { mapGetters } from 'vuex'
 import RightWarp from '@/components/RightWarp'
 import ImageDialog from '@/components/ImageDialog'
@@ -66,18 +66,8 @@ export default {
   },
   data() {
     return {
-      article: {
-        title: '30分钟写一个简单QQ自动回复机器人',
-        info: {
-          author: 'zzz',
-          time: '2019-09-19',
-          views: 5655,
-          comment: 45,
-          wordNumber: 4564,
-          type: 'js'
-        }
-      },
-      articleHtml: '',
+      article: {},
+      loading: false,
       offsetTop: '',
       offsetHeight: '',
       headerFixed: false,
@@ -85,13 +75,21 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo']),
+    ...mapGetters(['userInfo', 'cags']),
     action() {
       return `${process.env.VUE_APP_BASE_API}/Basic/UploadImage`
+    },
+    id() {
+      return this.$route.query.id
+    }
+  },
+  watch: {
+    id() {
+      this.getDataList()
     }
   },
   created() {
-    // this.getDataList()
+    this.getDataList()
     window.hljs = hljs
     require('@/utils/highlightjs-line-numbers')
     // require('highlightjs-line-numbers.js/src/highlightjs-line-numbers.js') // 官方queryAll() 值不正确
@@ -109,10 +107,12 @@ export default {
       // 代码行号
       hljs.registerLanguage('javascript', javascript)
       // 生成目录
-      this.creatTag()
-      // new Gumshoe('#my-awesome-nav a')
-      // 获取目录高度
-      this.getTagHigh()
+      if (this.article.body.length > 1000) {
+        this.creatTag()
+        // new Gumshoe('#my-awesome-nav a')
+        // 获取目录高度
+        this.getTagHigh()
+      }
     }
   },
   deforeDestroyed() {
@@ -203,7 +203,6 @@ export default {
           // }
           // document.getElementById(el.getAttribute('rel')).scrollIntoView()
           that.activeStep = index
-          console.log(that.activeStep)
           that.setActiveTag()
         })
       })
@@ -211,7 +210,6 @@ export default {
     },
     setActiveTag() {
       // 设置样式
-      console.log(document.querySelectorAll('.outline-inside .outline-link'))
       document.querySelectorAll('.outline-inside .outline-link').forEach(e => {
         e.parentNode.classList.remove('is-clicked')
         e.classList.remove('is-clicked-a')
@@ -235,7 +233,6 @@ export default {
 
       // 滚动监听
       document.querySelectorAll('.outline-heading').forEach((el, index) => {
-        console.log(el.offsetTop)
         if (scrollTop >= el.offsetTop) {
           this.activeStep = index
           this.setActiveTag()
@@ -244,8 +241,43 @@ export default {
     },
     /** *** 获取数据 end *** **/
     getDataList() {
-      getArticle().then(res => {
-        this.articleHtml = res.Data
+      this.loading = true
+      getArticleById({ id: parseInt(this.id) }).then(res => {
+        // this.article = res.Data
+        const data = res.Data
+        // data.forEach(n => {
+        // const categories = n.categories.split(',')
+        // n.categories = []
+        // categories.forEach((e, index) => {
+        //   const ob = this.cags.find(i => i.id === parseInt(e))
+        //   e = ob ? this.cags.find(i => i.id === parseInt(e)).cagName : ''
+        //   console.log(e)
+        //   if (index > 0) {
+        //     n.categories.push('，' + e)
+        //   } else {
+        //     n.categories.push(e)
+        //   }
+        // })
+        // })
+        const categories = data.categories.split(',')
+        data.categories = ''
+        categories.forEach((e, index) => {
+          const ob = this.cags.find(i => i.id === parseInt(e))
+          e = ob ? this.cags.find(i => i.id === parseInt(e)).cagName : ''
+          if (index > 0) {
+            data.categories = data.categories + '，' + e
+          } else {
+            data.categories = e
+          }
+        })
+        // 设置标签
+        this.article = data
+        this.$nextTick(() => {
+          this.loading = false
+        })
+      }).catch(err => {
+        this.loading = false
+        console.error(err)
       })
     }
 

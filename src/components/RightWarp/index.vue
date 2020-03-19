@@ -18,62 +18,61 @@
           .span 好
         .tabs-content
           .content-name 热门文章
-          .content-warp.layout-row(v-for="(item,index) in hotList" :key="index")
-            .icon-warp
+          .content-warp.layout-row(v-for="(item,index) in article[0]" :key="index")
+            .icon-warp.layout-row__center.align-center(:style="{color: colorList[Math.floor((Math.random()*colorList.length))]}")
               //- 分类图标
-              i(class="icon iconfont" :class="[item.typeIcon]")
+              i(v-if="!cags.find(n => parseInt(item.categories.split(',')[0]) == n.id)" class="icon iconfont iconiconset0401")
+              i(v-else class="icon iconfont" :class="cags.find(n => parseInt(item.categories.split(',')[0]) == n.id).icon")
             .title-warp.flex1
-              .title {{item.title}}
+              .title(@click="goDetail(item)") {{item.title}}
               .content.layout-row
                 .pl
-                  i(class="icon iconfont iconliaotian")
-                  span {{item.comments}}
-                .pl
+                  i(class="icon iconfont iconchangyongicon-")
+                  span {{item.visits}}
+                .pl(v-if="tags.find(n => parseInt(item.tags.split(',')[0]) == n.id)")
                   i(class="icon iconfont iconbiaoqian")
-                  span {{item.bianqian}}
-
-
-
-      el-tab-pane(name="second")
-        span(slot="label")
-          .span 好
-          i(class="icon iconfont iconrespond")
-          .span 好
-        .tabs-content
-          .content-name 最新评论
-          .content-warp.layout-row(v-for="(item,index) in hotList" :key="index")
-            .icon-warp
-              //- 分类图标
-              i(class="icon iconfont" :class="[item.typeIcon]")
-            .title-warp.flex1
-              .title {{item.title}}
-              .content.layout-row
-                .pl
-                  i(class="icon iconfont iconliaotian")
-                  span {{item.comments}}
-                .pl
-                  i(class="icon iconfont iconbiaoqian")
-                  span {{item.bianqian}}
+                  span {{tags.find(n => parseInt(item.tags.split(',')[0]) == n.id).tagName}}
+      //- el-tab-pane(name="second")
+      //-   span(slot="label")
+      //-     .span 好
+      //-     i(class="icon iconfont iconrespond")
+      //-     .span 好
+      //-   .tabs-content
+      //-     .content-name 最新评论
+      //-     .content-warp.layout-row(v-for="(item,index) in hotList" :key="index")
+      //-       .icon-warp
+      //-         //- 分类图标
+      //-         i(class="icon iconfont" :class="[item.typeIcon]")
+      //-       .title-warp.flex1
+      //-         .title {{item.title}}
+      //-         .content.layout-row
+      //-           .pl
+      //-             i(class="icon iconfont iconliaotian")
+      //-             span {{item.visits}}
+      //-           .pl
+      //-             i(class="icon iconfont iconbiaoqian")
+      //-             span {{item.bianqian}}
       el-tab-pane(name="third")
         span(slot="label")
           .span 好
           i(class="icon iconfont iconliwu")
           .span 好
         .tabs-content
-          .content-name 随机文章
-          .content-warp.layout-row(v-for="(item,index) in hotList" :key="index")
-            .icon-warp
+          .content-name 最新文章
+          .content-warp.layout-row(v-for="(item,index) in article[1]" :key="index")
+            .icon-warp.layout-row__center.align-center(:style="{color: colorList[Math.floor((Math.random()*colorList.length))]}")
               //- 分类图标
-              i(class="icon iconfont" :class="[item.typeIcon]")
+              i(v-if="!cags.find(n => parseInt(item.categories.split(',')[0]) == n.id)" class="icon iconfont iconiconset0401")
+              i(v-else class="icon iconfont" :class="cags.find(n => parseInt(item.categories.split(',')[0]) == n.id).icon")
             .title-warp.flex1
-              .title {{item.title}}
+              .title(@click="goDetail(item)") {{item.title}}
               .content.layout-row
                 .pl
-                  i(class="icon iconfont iconliaotian")
-                  span {{item.comments}}
-                .pl
+                  i(class="icon iconfont iconchangyongicon-")
+                  span {{item.visits}}
+                .pl(v-if="tags.find(n => parseInt(item.tags.split(',')[0]) == n.id)")
                   i(class="icon iconfont iconbiaoqian")
-                  span {{item.bianqian}}
+                  span {{tags.find(n => parseInt(item.tags.split(',')[0]) == n.id).tagName}}
       //- 博客信息
       .blog-info
         .blog-info-title.mb_10 博客信息
@@ -82,26 +81,29 @@
             .blog-info-content
               i(class="icon iconfont iconxunzhang")
               span 文章数目
-            span.tag {{blogInfo.artcleNum}}
-          .blog-info-list
-            .blog-info-content
-              i(class="icon iconfont iconrespond")
-              span 评论数目
-            span.tag  {{blogInfo.commentNum}}
+            span.tag {{total}}篇
+          //- .blog-info-list
+          //-   .blog-info-content
+          //-     i(class="icon iconfont iconrespond")
+          //-     span 评论数目
+          //-   span.tag  {{blogInfo.commentNum}}
           .blog-info-list
             .blog-info-content
               i(class="icon iconfont iconchuxingtianshu")
               span 运行天数
-            span.tag  {{blogInfo.searveNum}}
+            span.tag  {{dateStar}}天
           .blog-info-list
             .blog-info-content
               i(class="icon iconfont icondianboxindiantu")
               span 最后活动
-            span.tag  {{blogInfo.lastLog}}
+            span.tag  {{activeTime}}
       //- 标签云
       .blog-info
         .blog-info-title.mb_10 标签云
-        span.tag.mr_10(v-for="(item,index) in tagList" :key="index")  {{item}}
+        span.tag.mr_10(
+          v-for="(item,index) in tags"
+          :key="index"
+          @click="goTags(item.id)")  {{item.tagName}}
       slot
 
   //- right-warp.right-warp
@@ -112,7 +114,7 @@
 //   getCheckList } from '@/api/warehouses'
 import { mapGetters } from 'vuex'
 import ImageDialog from '@/components/ImageDialog'
-// import { dateForamt } from '@/utils/index'
+import { datedifference, parseTime } from '@/utils/index'
 export default {
   name: 'Index',
   components: {
@@ -140,21 +142,29 @@ export default {
         searveNum: 4564,
         lastLog: '2020-15-66'
       },
-      tagList: ['css', 'javascript']
+      tagList: ['css', 'javascript'],
+      dateStar: '',
+      colorList: ['#808E9B', '#FBB950', '#53E5D8', '#FC6121', '#71BEF2', '#67C23A', '#F56C6C', '#409EFF', '#E6A23C']
     }
   },
   computed: {
-    ...mapGetters(['userInfo']),
+    ...mapGetters(['userInfo', 'tags', 'cags', 'article', 'total']),
     action() {
       return `${process.env.VUE_APP_BASE_API}/Basic/UploadImage`
+    },
+    activeTime() {
+      if (this.article[3]) {
+        return parseTime(this.article[3][0].activeTime, '{y}-{m}-{d}')
+      } else {
+        return 0
+      }
     }
   },
   created() {
-    // this.getDataList()
-    // this.getDicsDataList()
+    this.dateStar = datedifference('2019-12-20', parseTime(new Date(), '{y}-{m}-{d}'))
   },
   mounted() {
-
+    // this.cags
   },
   methods: {
     /** *** 通用 start *** **/
@@ -165,6 +175,27 @@ export default {
     /** *** 按钮操作 start *** **/
     handleClick() {
 
+    },
+    goTags(id) {
+      localStorage.setItem('tagId', id)
+      this.$store.commit('user/SET_TAGID', id)
+      this.$router.push(
+        {
+          path: `/welcome/tag`
+        }
+      )
+      // this.$router.go(0)
+      // this.$forceUpdate()
+    },
+    goDetail(item) {
+      this.$router.push(
+        {
+          path: `/welcome/detail`,
+          query: {
+            id: item.id
+          }
+        }
+      )
     }
     /** *** 获取数据 end *** **/
 
@@ -241,21 +272,26 @@ $setcolor: #777;
       width: 40px;
       height: 40px;
       overflow: hidden;
-      background: #999;
+      // background: #999;
       margin-right: 15px;
       border: 2px solid #fff;
       border-radius: 20%;
       box-shadow: 2px 2px 3px #e1e1e1;
+      .icon{
+        font-size: 25px;
+      }
     }
     .title-warp{
       .title{
         word-break: break-all;
         white-space: pre-wrap;
         font-size: 14px;
+        cursor: pointer;
       }
       .pl{
         font-size: 13px;
         color: #a0a0a0;
+        margin-right: 5px;
       }
     }
   }
@@ -270,7 +306,7 @@ $setcolor: #777;
     border-radius: 2px;
     margin-bottom: 20px;
     padding-left: 0;
-    background: #FEFEFE;
+    background: #fff;
     .blog-info-list{
       font-size: 14px;
       padding: 15px 15px;
@@ -303,6 +339,7 @@ $setcolor: #777;
   padding-top: 2px;
   color: #fff;
   border-radius: 10px;
+  cursor: pointer;
   // margin-bottom: -2px;
 }
 </style>

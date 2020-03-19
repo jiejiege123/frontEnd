@@ -37,11 +37,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/yzzj',
-    component: () => import('@/views/pages/Yanzzj/index'),
-    hidden: true
-  },
-  {
     path: '/admin',
     component: () => import('@/views/pages/Welcome/index'),
     hidden: true
@@ -66,36 +61,78 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/welcome',
-    hidden: true,
-    children: [{
-      path: 'welcome',
-      name: 'Welcome',
-      component: () => import('@/views/pages/Welcome/index'),
-      meta: { title: '欢迎页', icon: 'dashboard' }
-    }]
+    Icon: 'iconhome',
+    meta: { title: '首页', aicon: 'iconhome' },
+    // hidden: true,
+    // alwaysShow: true,
+    children: [
+      {
+        path: 'welcome',
+        name: 'Welcome',
+        component: () => import('@/views/pages/Page/PageList/index'),
+        meta: { title: '首页', aicon: 'iconhome', breadcrumb: false }
+        // children: [
+        //   {
+        //     path: 'tag',
+        //     name: 'tag',
+        //     hidden: true,
+        //     component: () => import('@/views/pages/Page/PageList/index'),
+        //     meta: { title: '标签', aicon: 'iconhome' }
+        //   },
+        //   {
+        //     path: '/welcome/detail',
+        //     name: 'welcomeDetail',
+        //     hidden: true,
+        //     component: (res) => require([`@/views/pages/Post/PageDtl/index.vue`], res),
+        //     meta: { title: '正文' }
+        //   }
+        // ]
+      },
+      {
+        path: '/welcome/tag',
+        name: 'tag',
+        hidden: true,
+        component: () => import('@/views/pages/Page/PageList/index'),
+        meta: { title: '标签', aicon: 'iconhome' },
+        children: [
+          {
+            path: 'detail',
+            name: 'tagDetail',
+            hidden: true,
+            component: () => import('@/views/pages/Post/PageDtl/index'),
+            meta: { title: '正文', aicon: 'iconhome' }
+          }
+        ]
+      },
+      {
+        path: '/welcome/detail',
+        name: 'welcomeDetail',
+        hidden: true,
+        component: (res) => require([`@/views/pages/Post/PageDtl/index.vue`], res),
+        meta: { title: '正文' }
+      }
+    ]
   }
-  // { path: '*', redirect: '/404' }
+
   // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: 'Example', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // },
+  //     'Id': '1',
+  //     'Name': '首页',
+  //     'ParentId': null,
+  //     'Url': 'Info',
+  //     'up': true,
+  //     'Icon': 'iconhome',
+  //     'Children': [
+  //       {
+  //         'Id': '1-1',
+  //         'Name': '首页',
+  //         'ParentId': '1',
+  //         'Url': 'Com',
+  //         'Icon': 'iconhome',
+  //         'Children': []
+  //       }
+  //     ]
+  //   },
+  // { path: '*', redirect: '/404' }
 
   // {
   //   path: '/form',

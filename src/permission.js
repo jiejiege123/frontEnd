@@ -18,7 +18,7 @@ const whiteList = ['/login'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   if (to.path !== '/404') {
-    localStorage.setItem('router', to.path)
+    localStorage.setItem('router', to.fullPath)
   }
   // start progress bar
   NProgress.start()
@@ -36,13 +36,22 @@ router.beforeEach(async(to, from, next) => {
     NProgress.done()
   } else {
     try {
-      store.dispatch('user/getInfo').then(userInfo => {
+      await store.dispatch('user/getInfo').then(userInfo => {
         const toPath = localStorage.getItem('router')
         next({ path: toPath || '/' })
         NProgress.done()
       }).catch(reson => {
         console.error(reson)
         NProgress.done()
+      })
+      store.dispatch('user/getRouters').then(res => {
+        store.dispatch('permission/generateRoutes', res).then((res) => {
+          router.addRoutes(res.allRoutes)
+          router.options.routes = res.allRoutes
+        })
+      }).catch(reson => {
+        console.error(reson + '1')
+        throw reson
       })
     } catch (error) {
       NProgress.done()
