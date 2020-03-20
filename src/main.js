@@ -27,6 +27,9 @@ import '@/permission' // permission control
 import '@/assets/font/iconfont.css'
 import '@/assets/css/articleoutline.css'
 import '@/assets/css/autoc.css'
+
+// import Autoc from '@/utils/autoc.js'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -44,6 +47,8 @@ if (process.env.NODE_ENV === 'production') {
 
 import vueXlsxTable from 'vue-xlsx-table'
 Vue.use(vueXlsxTable, { rABS: false })
+
+// Vue.use(Autoc)
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
@@ -65,6 +70,8 @@ Vue.use(Print)
 Vue.use(vueJsonp)
 
 Vue.prototype.Viewer = Viewer
+// Vue.prototype.Autoc = Autoc
+
 Viewer.setDefaults(viewerOption)
 
 

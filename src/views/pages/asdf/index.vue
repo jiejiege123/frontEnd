@@ -203,7 +203,6 @@ export default {
           // }
           // document.getElementById(el.getAttribute('rel')).scrollIntoView()
           that.activeStep = index
-          console.log(that.activeStep)
           that.setActiveTag()
         })
       })
@@ -211,7 +210,6 @@ export default {
     },
     setActiveTag() {
       // 设置样式
-      console.log(document.querySelectorAll('.outline-inside .outline-link'))
       document.querySelectorAll('.outline-inside .outline-link').forEach(e => {
         e.parentNode.classList.remove('is-clicked')
         e.classList.remove('is-clicked-a')

@@ -1,12 +1,14 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define([], factory)
+    define([], function() {
+      return factory(root)
+    })
   } else if (typeof exports === 'object') {
-    module.exports = factory()
+    module.exports = factory(root)
   } else {
-    root.AutocJs = factory()
+    root.AutocJs = factory(root)
   }
-}(this, function() {
+}(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
   'use strict'
 
   var _createClass = (function() { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor) } } return function(Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor } }())
@@ -1199,18 +1201,7 @@
 
     return pid
   }
-
-  if (window.jQuery) {
-    // 将 ArticleOutline 扩展为一个 jquery 插件
-    $.extend($.fn, {
-      articleOutline: function articleOutline(options) {
-        var $article = $(this)
-
-        return new AutocJs($.extend({}, options, {
-          article: $article
-        }))
-      }
-    })
-  }
   return AutocJs
 }))
+
+

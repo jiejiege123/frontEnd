@@ -24,7 +24,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  publicPath: './',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,
@@ -60,7 +60,8 @@ module.exports = {
       }
     },
     externals: {
-      'AMap': 'AMap' // 高德地图配置
+      'AMap': 'AMap' // 高德地图配置,
+      // '@/utils/autoc.js': 'AutoJs'
     }
   },
   chainWebpack(config) {
