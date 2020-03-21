@@ -5,17 +5,20 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
+      <div class="avatar-wrapper">
+        <span style="margin-right:25px; font-weight:400; color:#606266; font-size:14px">
+          {{ userInfo.userName }}
+        </span>
+        <!-- <i class="el-icon-caret-bottom" /> -->
+      </div>
+      <!-- <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <!-- <span style="padding-right: 15px">
-            {{ userLy }}
-          </span> -->
           <span>
             {{ userInfo.userName }}
           </span>
-          <!-- <i class="el-icon-caret-bottom" /> -->
+          <i class="el-icon-caret-bottom" />
         </div>
-        <!-- <el-dropdown-menu slot="dropdown" class="user-dropdown">
+        <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
               主页
@@ -30,8 +33,8 @@
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出</span>
           </el-dropdown-item>
-        </el-dropdown-menu> -->
-      </el-dropdown>
+        </el-dropdown-menu>
+      </el-dropdown> -->
     </div>
     <el-dialog
       title="修改密码"
@@ -425,17 +428,14 @@ export default {
     .avatar-container {
       padding-right: 30px;
       cursor: pointer;
-
       .avatar-wrapper {
         position: relative;
-
         .user-avatar {
           cursor: pointer;
           width: 40px;
           height: 40px;
           border-radius: 10px;
         }
-
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
