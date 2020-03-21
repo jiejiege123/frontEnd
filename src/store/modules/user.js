@@ -24,7 +24,8 @@ const state = {
   tagId: [],
   cags: [],
   article: [],
-  total: ''
+  total: '',
+  search: ''
 }
 
 const mutations = {
@@ -66,6 +67,9 @@ const mutations = {
   },
   SET_TAGID: (state, data) => {
     state.tagId = data
+  },
+  SET_SEARCH: (state, data) => {
+    state.search = data
   }
 }
 

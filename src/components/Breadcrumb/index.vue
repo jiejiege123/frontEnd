@@ -6,7 +6,15 @@
           v-if="item.redirect==='noRedirect'||index==levelList.length-1"
           class="no-redirect"
         >
-          {{ item.name === 'tag' ? item.meta.title + ' _ ' + tags.find(n => parseInt(tagId) === n.id).tagName :item.meta.title }}
+          <span v-if="item.name === 'tag'">
+            {{ item.meta.title + ' _ ' + tags.find(n => parseInt(tagId) === n.id).tagName }}
+          </span>
+          <span v-else-if="item.name === 'search'">
+            {{ item.meta.title + search }}
+          </span>
+          <span v-else>
+            {{ item.meta.title }}
+          </span>
         </span>
         <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
       </el-breadcrumb-item>
@@ -26,7 +34,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['tags', 'tagId'])
+    ...mapGetters(['tags', 'tagId', 'search'])
   },
   watch: {
     $route() {

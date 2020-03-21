@@ -10,6 +10,15 @@
 <template lang="pug">
 .layout-column(style="background: #f9f9f9;")
   .warp
+    div.layout-row__center(style="width:100%;margin-top: 15px; margin-bottom:15px")
+      el-input.input-search(
+        placeholder='请输入关键词'
+        v-model='searchKey'
+        size="small"
+        clearable
+        style="width:210px"
+        @clear="doSearch")
+        el-button(slot="append" icon="el-icon-search" type="primary" size="mini" @click="doSearch")
     el-tabs(v-model="activeName" @tab-click="handleClick")
       el-tab-pane(name="first")
         span(slot="label")
@@ -148,7 +157,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo', 'tags', 'cags', 'article', 'total']),
+    ...mapGetters(['userInfo', 'tags', 'cags', 'article', 'total', 'search']),
     action() {
       return `${process.env.VUE_APP_BASE_API}/Basic/UploadImage`
     },
@@ -157,6 +166,14 @@ export default {
         return parseTime(this.article[3][0].activeTime, '{y}-{m}-{d}')
       } else {
         return 0
+      }
+    },
+    searchKey: {
+      get() {
+        return this.$store.state.user.search
+      },
+      set(val) {
+        this.$store.state.user.search = val
       }
     }
   },
@@ -196,6 +213,23 @@ export default {
           }
         }
       )
+    },
+    doSearch() {
+      // this.$store.commit('user/SET_SEARCH', this.searchKey)
+      // console.log(this.$route.fullPath)
+      // this.$router.push({
+      //   path: '/welcome/search',
+      //   query: {
+      //     keyword: this.searchKey
+      //   }
+      // })
+      if (this.$route.path.includes('search')) {
+        this.$emit('onSearch', this.searchKey)
+      } else {
+        this.$router.push({
+          path: '/welcome/search'
+        })
+      }
     }
     /** *** 获取数据 end *** **/
 
@@ -246,8 +280,8 @@ $setcolor: #777;
       }
       .el-tabs__item{
         // padding: 10px
-        line-height: 60px;
-        height: 60px;
+        line-height: 50px;
+        height: 50px;
         .span{
           display: inline;
           font-size: 10px;
@@ -341,5 +375,8 @@ $setcolor: #777;
   border-radius: 10px;
   cursor: pointer;
   // margin-bottom: -2px;
+}
+.input-search{
+  // margin: 0 auto;
 }
 </style>

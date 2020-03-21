@@ -32,7 +32,7 @@ router-view(v-if="$route.fullPath.includes('detail')")
         :page-sizes="[20, 50, 100, 200]"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total")
-  right-warp.right-warp
+  right-warp.right-warp(@onSearch="doSearch")
     //- .catalog#catalog(ref="catalog" :class="headerFixed?'isFixed':''")
 </template>
 
@@ -85,7 +85,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo', 'tags', 'cags', 'tagId']),
+    ...mapGetters(['userInfo', 'tags', 'cags', 'tagId', 'search']),
     ...mapState({
       device: state => state.app.device
     }),
@@ -99,6 +99,10 @@ export default {
     }
   },
   created() {
+    const keyword = getUrlKey('keyword', window.location.href)
+    if (keyword) {
+      this.$store.commit('user/SET_SEARCH', keyword)
+    }
     if (!this.$route.fullPath.includes('detail')) {
       // const id = getUrlKey('id', window.location.href)
       // if (id) {
@@ -145,6 +149,12 @@ export default {
     },
     handleSizeChange(e) {
       this.pageSize = e
+      this.getDataList()
+    },
+    doSearch() {
+      this.pageSize = 20
+      this.currentPage = 1
+      // window.location.href =
       this.getDataList()
     },
     /** *** 通用 end *** **/
@@ -343,9 +353,15 @@ export default {
       //     path: `${this.$route.fullPath}/detail?id=${item.id}`
       //   })
       // }
-      this.$router.push({
-        path: `${this.$route.fullPath}/detail?id=${item.id}`
-      })
+      if (this.$route.path.includes('search')) {
+        this.$router.push({
+          path: `/welcome/detail?id=${item.id}`
+        })
+      } else {
+        this.$router.push({
+          path: `${this.$route.fullPath}/detail?id=${item.id}`
+        })
+      }
     },
     /** *** 获取数据 end *** **/
     getDataList() {
@@ -353,7 +369,7 @@ export default {
       const params = {
         page: this.currentPage,
         pageSize: this.pageSize,
-        keyword: '',
+        keyword: this.search,
         tags: '',
         categories: ''
       }

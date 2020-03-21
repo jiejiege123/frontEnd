@@ -23,6 +23,7 @@ const getters = {
   cags: state => state.user.cags,
   article: state => state.user.article,
   total: state => state.user.total,
-  tagId: state => state.user.tagId
+  tagId: state => state.user.tagId,
+  search: state => state.user.search
 }
 export default getters

@@ -105,6 +105,13 @@ export const constantRoutes = [
         ]
       },
       {
+        path: '/welcome/search',
+        name: 'search',
+        hidden: true,
+        component: () => import('@/views/pages/Page/PageList/index'),
+        meta: { title: '搜索', aicon: 'iconhome' }
+      },
+      {
         path: '/welcome/detail',
         name: 'welcomeDetail',
         hidden: true,

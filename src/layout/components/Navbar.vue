@@ -3,7 +3,14 @@
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <breadcrumb class="breadcrumb-container" />
-
+    <!-- el-input.input-search(
+        placeholder='请输入分类名称'
+        v-model='search'
+        size="mini"
+        clearable
+        style="width:230px"
+        @clear="doSearch")
+        el-button(slot="append" icon="el-icon-search" type="primary" size="mini" @click="doSearch") -->
     <div class="right-menu">
       <div class="avatar-wrapper">
         <span style="margin-right:25px; font-weight:400; color:#606266; font-size:14px">
@@ -146,6 +153,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import { changePassword } from '@/api/user'
+
 import md5 from 'js-md5'
 
 import { updateDepartmentData } from '@/api/system/department'
@@ -225,7 +233,8 @@ export default {
         type: 'update'
       },
       infoForm: {},
-      imgFile: ''
+      imgFile: '',
+      search: ''
     }
   },
   computed: {
@@ -506,5 +515,9 @@ export default {
 }
 .pt10{
   padding-top: 10px;
+}
+.input-search{
+  height: 50px;
+  display: inline-block;
 }
 </style>
