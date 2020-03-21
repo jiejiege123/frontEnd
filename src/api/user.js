@@ -77,3 +77,11 @@ export function getRouter() {
   })
 }
 
+// 获取动他
+export function getThumbs(params) {
+  return request({
+    url: '/blog/getThumbsList',
+    method: 'get',
+    params
+  })
+}

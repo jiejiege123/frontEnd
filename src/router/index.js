@@ -112,8 +112,34 @@ export const constantRoutes = [
         meta: { title: '正文' }
       }
     ]
+  },
+  // 归档 和 动态
+  {
+    path: '/archives',
+    component: Layout,
+    redirect: '/archives',
+    children: [
+      {
+        path: '/archives',
+        name: 'archivesList',
+        component: (res) => require([`@/views/pages/Archive/index.vue`], res),
+        meta: { title: '归档', aicon: 'icondonework' }
+      }
+    ]
+  },
+  {
+    path: '/thumb',
+    component: Layout,
+    redirect: '/thumb',
+    children: [
+      {
+        path: '/thumb',
+        name: 'archivesList',
+        component: (res) => require([`@/views/pages/Thumb/index.vue`], res),
+        meta: { title: '动态', aicon: 'iconlocking' }
+      }
+    ]
   }
-
   // {
   //     'Id': '1',
   //     'Name': '首页',

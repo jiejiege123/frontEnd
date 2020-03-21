@@ -6,30 +6,30 @@
  * @LastEditors: Please set LastEditors
  -->
 <template lang="pug">
-.index.layout-row#layScroll
+.index#layScroll(v-else :class="[device==='mobile'? 'layout-column' : 'layout-row']")
   .content-warp.flex1(v-loading="loading")
     .warp-header
       h1.title(style='') {{article.title}}
       .article-info.layout-row__center.align-center(:class="{'article-p-code': true}")
-        .span-warp
+        .span-warp.linenowarp
           i(class='icon iconfont iconRectangleCopy')
           span {{article.author}}
-        .span-warp
+        .span-warp.linenowarp
           i(class='icon iconfont iconRectangleCopy1')
           span {{article.creatTime}}
-        .span-warp
+        .span-warp.linenowarp
           i(class='icon iconfont iconchangyongicon-')
           span {{article.visits}}次浏览
-        .span-warp
+        .span-warp.linenowarp
           i(class='icon iconfont iconrespond')
           span {{article.commentNums || 0}}条评论
-        .span-warp
+        .span-warp.linenowarp
           i(class='icon iconfont icontubiao-')
           span {{article.md ? article.md.length : 0}}字数
-        .span-warp
+        .span-warp.linenowarp
           span #
           span {{article.categories}}
-    .article-warp
+    .article-warp(:class="[device==='mobile'? 'article-warp__mobile' : '']")
       //- 文章类容
       div.article-content#article(v-html="article.body" :class="{'article-p-code': true}")
       //- div adfasdfasdfasdfaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxsdfasdf
@@ -43,7 +43,7 @@
 
 <script >
 import { getArticleById } from '@/api/index'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import RightWarp from '@/components/RightWarp'
 import ImageDialog from '@/components/ImageDialog'
 import hljs from 'highlight.js/lib/highlight'
@@ -80,6 +80,9 @@ export default {
   },
   computed: {
     ...mapGetters(['userInfo', 'cags']),
+    ...mapState({
+      device: state => state.app.device
+    }),
     action() {
       return `${process.env.VUE_APP_BASE_API}/Basic/UploadImage`
     },
@@ -113,7 +116,7 @@ export default {
       // 代码行号
       hljs.registerLanguage('javascript', javascript)
       // 生成目录
-      if (this.article.body.length > 1000) {
+      if (this.article.body.length > 1000 && this.device !== 'mobile') {
         this.creatTag()
         // 获取目录高度
         this.getTagHigh()
@@ -1463,10 +1466,13 @@ $articleColor: #333;
   color: $articleInfoColor;
   font-size: 13px;
   margin-top: 10px;
+  max-width: 100%;
+  flex-wrap: wrap;
   .span-warp{
     display: flex;
     align-items: center;
     margin-right: 15px;
+
     .icon{
       margin-right: 5px
     }
@@ -1475,7 +1481,8 @@ $articleColor: #333;
 .article-warp{
   background: $arctilBgc;
   padding: 30px;
-  width: 760px;
+  width: 768px;
+  max-width: 100%;
   border-radius: 6px;
   border: none;
   margin: 0 auto;
@@ -1488,8 +1495,12 @@ $articleColor: #333;
     color: #9b9b9b;
   }
 }
+.article-warp__mobile{
+  padding: 15px;
+}
 .right-warp{
-  width: 240px
+  min-width: 240px;
+  max-width: 100%;
 }
 .article-content{
   color: $articleColor;

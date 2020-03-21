@@ -7,7 +7,7 @@
  -->
 <template lang="pug">
 router-view(v-if="$route.fullPath.includes('detail')")
-.index.layout-row#layScroll(v-else)
+.index#layScroll(v-else :class="[device==='mobile'? 'layout-column' : 'layout-row']")
   .content-warp.flex1(v-loading="loading")
     .article-warp(v-for="(item,index) in dataList" :key="index")
       h1.title.mb_15(@click="goPost(item)") {{item.title}}
@@ -38,7 +38,7 @@ router-view(v-if="$route.fullPath.includes('detail')")
 
 <script >
 import { getArticleList } from '@/api/index'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import RightWarp from '@/components/RightWarp'
 import ImageDialog from '@/components/ImageDialog'
 import hljs from 'highlight.js/lib/highlight'
@@ -86,6 +86,9 @@ export default {
   },
   computed: {
     ...mapGetters(['userInfo', 'tags', 'cags', 'tagId']),
+    ...mapState({
+      device: state => state.app.device
+    }),
     action() {
       return `${process.env.VUE_APP_BASE_API}/Basic/UploadImage`
     }
@@ -425,7 +428,8 @@ $articleColor: #333;
 .article-warp{
   background: $arctilBgc;
   padding: 30px;
-  width: 760px;
+  width: 768px;
+  max-width: 100%;
   border-radius: 6px;
   border: none;
   margin: 0 auto;
@@ -439,7 +443,8 @@ $articleColor: #333;
   }
 }
 .right-warp{
-  width: 240px
+  min-width: 240px;
+  max-width: 100%;
 }
 .cut-line{
   margin-top: 15px;

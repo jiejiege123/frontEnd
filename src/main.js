@@ -47,7 +47,6 @@ if (process.env.NODE_ENV === 'production') {
 
 import vueXlsxTable from 'vue-xlsx-table'
 Vue.use(vueXlsxTable, { rABS: false })
-
 // Vue.use(Autoc)
 
 // set ElementUI lang to EN

@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { getTags, getArticleOrder, getCategoriesAll } from '@/api/index'
+
 export default {
   name: 'AppMain',
   computed: {
@@ -17,6 +19,33 @@ export default {
     },
     key() {
       return this.$route.path + (this.$route.query.id || '')
+    }
+  },
+  watch: {
+    key() {
+      this.getBaseData()
+    }
+  },
+  created() {
+    // this.getBaseData()
+  },
+  methods: {
+    getBaseData() {
+      const param1 = {
+        page: 1,
+        pageSize: 2000,
+        keyword: ''
+      }
+      const param2 = {
+        page: 1,
+        pageSize: 5
+      }
+      Promise.all([getTags(param1), getArticleOrder(param2), getCategoriesAll()]).then(res => {
+        this.$store.commit('user/SET_TAGS', res[0].Data.data)
+        this.$store.commit('user/SET_ARTICLEORDER', res[1].Data)
+        this.$store.commit('user/SET_CAGD', res[2].Data.data)
+        this.$store.commit('user/SET_TOTAL', res[1].Data[2][0].total)
+      })
     }
   }
 }
