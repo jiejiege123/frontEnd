@@ -250,6 +250,7 @@ $articleColor: #333;
   }
 }
 .thumb-content{
+  margin-top: 20px;
   background: #fff;
   padding: 30px;
   .thumb-list{

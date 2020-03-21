@@ -1506,9 +1506,12 @@ $articleColor: #333;
   color: $articleColor;
   font-size: 14px;
   font: 87.5%/1.2 -apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif;
-  line-height: 1.5;
+  line-height: 2;
   h1{
     line-height: 1.2 !important
+  }
+  /deep/ pre{
+    line-height: 1.3;
   }
 }
 .isFixed{

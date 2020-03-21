@@ -7,23 +7,24 @@
  -->
 <template lang="pug">
 router-view(v-if="$route.fullPath.includes('detail')")
-.index.layout-row#layScroll(v-else)
+.index#layScroll(v-else :class="[device==='mobile'? 'layout-column' : 'layout-row']")
   .content-warp.flex1(v-loading="loading")
-    el-timeline
-      el-timeline-item(
-        v-for="(item, index) in dataList"
-        :key="index"
-        :icon="item.icon"
-        :color="item.color"
-        :type="item.type"
-        size="large"
-        :timestamp="item.time"
-        placement="top")
-        div.layout-column(v-for="(list,i) in item.children" :key="i")
-          span.timeline-title(@click="goDetail(list)") {{list.title}}
-          div.timeline-tip
-            i.el-icon-date
-            span.timeline-tiem {{ list.creatTime.slice(8,10)}}日 发布
+    .article-warp
+      el-timeline
+        el-timeline-item(
+          v-for="(item, index) in dataList"
+          :key="index"
+          :icon="item.icon"
+          :color="item.color"
+          :type="item.type"
+          size="large"
+          :timestamp="item.time"
+          placement="top")
+          div.layout-column(v-for="(list,i) in item.children" :key="i")
+            span.timeline-title(@click="goDetail(list)") {{list.title}}
+            div.timeline-tip
+              i.el-icon-date
+              span.timeline-tiem {{ list.creatTime.slice(8,10)}}日 发布
 
 
   right-warp.right-warp
@@ -32,7 +33,7 @@ router-view(v-if="$route.fullPath.includes('detail')")
 
 <script >
 import { getArticleList } from '@/api/index'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import RightWarp from '@/components/RightWarp'
 import ImageDialog from '@/components/ImageDialog'
 export default {
@@ -74,6 +75,9 @@ export default {
   },
   computed: {
     ...mapGetters(['userInfo', 'tags', 'cags', 'tagId']),
+    ...mapState({
+      device: state => state.app.device
+    }),
     action() {
       return `${process.env.VUE_APP_BASE_API}/Basic/UploadImage`
     }
@@ -244,7 +248,8 @@ $articleColor: #333;
 .article-warp{
   background: $arctilBgc;
   padding: 30px;
-  width: 760px;
+  width: 768px;
+  max-width: 100%;
   border-radius: 6px;
   border: none;
   margin: 0 auto;
@@ -258,7 +263,8 @@ $articleColor: #333;
   }
 }
 .right-warp{
-  width: 240px
+  min-width: 240px;
+  max-width: 100%;
 }
 .cut-line{
   margin-top: 15px;
