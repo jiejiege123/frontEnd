@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-07-21 16:07:15
- * @LastEditTime: 2020-03-11 11:48:45
+ * @LastEditTime: 2020-04-02 16:23:09
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -103,5 +103,15 @@ body .el-table .success-row {
 }
 .app-main{
   background: #F0F3F4;
+}
+blockquote{
+  color: #666;
+  padding: 2px 1em;
+  margin: 10px 0;
+  border-left: 4px solid #cbcbcb;
+  background-color: #f8f8f8;
+  p{
+    margin: 5px 0;
+  }
 }
 </style>
