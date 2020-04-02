@@ -22,7 +22,7 @@ router-view(v-if="$route.fullPath.includes('detail')")
           span {{item.author}}
         .span-warp
           i(class='icon iconfont iconRectangleCopy1')
-          span {{item.updateTime}}
+          span {{item.updateTime.slice(0, 10)}}
     .pages
       el-pagination(
         @current-change="handleCurrentChange"

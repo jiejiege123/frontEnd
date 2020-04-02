@@ -8,7 +8,7 @@
  -->
 
 <template lang="pug">
-.layout-column(style="background: #f9f9f9;")
+.layout-column(style="background: #f9f9f9; max-width: 240px;")
   .warp
     div.layout-row__center(style="width:100%;margin-top: 15px; margin-bottom:15px")
       el-input.input-search(

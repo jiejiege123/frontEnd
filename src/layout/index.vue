@@ -8,6 +8,18 @@
         <tags-view v-if="needTagsView" />
       </div>
       <app-main />
+      <div class="footer">
+        <p>
+          © 2020 Copyright
+          <a :href="userInfo.sitHttp" target="_blank" rel="noopener noreferrer">
+            舴艋舟_个人博客
+          </a>
+          / Powered by Vue & Nodejs
+        </p>
+        <a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">
+          蜀ICP备18023980号-2
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -33,7 +45,7 @@ export default {
       needTagsView: state => state.settings.tagsView,
       fixedHeader: state => state.settings.fixedHeader
     }),
-    ...mapGetters(['routers']),
+    ...mapGetters(['routers', 'userInfo']),
     classObj() {
       return {
         hideSidebar: !this.sidebar.opened,
@@ -97,5 +109,12 @@ export default {
 
   .mobile .fixed-header {
     width: 100%;
+  }
+  .footer{
+    color: #777;
+    text-align: center;
+    padding-bottom: 20px;
+    font-family: "Source Sans Pro","Hiragino Sans GB","Microsoft Yahei",SimSun,Helvetica,Arial,Sans-serif,monospace;
+    font-size: 14px;
   }
 </style>
