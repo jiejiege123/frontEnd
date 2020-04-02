@@ -16,7 +16,7 @@
           span {{article.author}}
         .span-warp.linenowarp
           i(class='icon iconfont iconRectangleCopy1')
-          span {{article.creatTime}}
+          span {{article.creatTime.slice(0, 10)}}
         .span-warp.linenowarp
           i(class='icon iconfont iconchangyongicon-')
           span {{article.visits}}次浏览
@@ -106,6 +106,8 @@ export default {
   mounted() {
     // 目录吸顶监听滚动
     window.addEventListener('scroll', this.handleScroll)
+
+    // markdown 表格边框
   },
   updated() {
     if (document.querySelectorAll('.outline-inside').length === 0) {
@@ -122,6 +124,15 @@ export default {
         this.getTagHigh()
       }
     }
+    // this.$nextTick(() => {
+    //   const tables = document.querySelectorAll('.article-content>table')
+    //   console.log(tables)
+    //   tables.forEach(n => {
+    //     n.setAttribute('border', '1')
+    //     n.setAttribute('cellspacing', '0')
+    //     n.setAttribute('cellpadding', '0')
+    //   })
+    // })
   },
   deforeDestroyed() {
     window.removeEventListener('scroll', this.handleScroll)
@@ -1362,7 +1373,7 @@ export default {
         // 调整位直接在文章内生成导航
         position: 'inside',
         // 并且在文章标题前显示段落的章节层次索引值
-        isGenerateHeadingChapterCode: true
+        isGenerateHeadingChapterCode: false
       })
       // 锚点问题
       document.querySelectorAll('.outline-inside .outline-link').forEach((el, index) => {
@@ -1407,7 +1418,7 @@ export default {
     /** *** 获取数据 end *** **/
     getDataList() {
       this.loading = true
-      getArticleById({ id: parseInt(this.id) }).then(res => {
+      getArticleById({ id: parseInt(this.id), click: true }).then(res => {
         const data = res.Data
         const categories = data.categories.split(',')
         data.categories = ''
@@ -1511,7 +1522,16 @@ $articleColor: #333;
     line-height: 1.2 !important
   }
   /deep/ pre{
-    line-height: 1.3;
+    line-height: 1.5;
+  }
+  /deep/ &>table{
+    border: 1px solid #dfe2e5;
+    border-spacing: 2px;
+    border-collapse: collapse;
+    td,th{
+      padding: 6px 13px;
+      border: 1px solid #dfe2e5;
+    }
   }
 }
 .isFixed{
@@ -1521,7 +1541,14 @@ $articleColor: #333;
   width: 240px;
 }
 
+.catalog{
+  max-height: calc(100% - 70px);
 
+  /deep/ .outline-inside-body{
+    max-height: calc(100vh - 150px);
+    overflow-y: auto
+  }
+}
 </style>
 
 <style lang="scss">

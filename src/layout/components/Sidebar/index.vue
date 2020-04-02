@@ -34,7 +34,7 @@
         <sidebar-item v-for="route in routeMultiple" :key="route.path" :class="{ 'icon-left': isCollapse}" :item="route" :base-path="route.path" />
       </el-menu>
       <div class="footer layout-row__around align-center" :class="{'footer-coll': isCollapse}">
-        <div class="foot-list layout-column align-center">
+        <div class="foot-list layout-column align-center" @click="goAdmin">
           <i class="icon iconfont iconsetting" />
           <span>管理</span>
         </div>
@@ -113,6 +113,12 @@ export default {
   created() {
   },
   mounted() {
+
+  },
+  methods: {
+    goAdmin() {
+      window.open('https://admin.zemengzhou.top')
+    }
   }
 }
 </script>
