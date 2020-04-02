@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-03-11 08:54:13
- * @LastEditTime: 2020-03-11 09:13:22
+ * @LastEditTime: 2020-04-02 15:33:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \bpsp-uie:\doit\oneStep\frontend\src\components\RightWarp\index.vue
@@ -27,7 +27,7 @@
           .span 好
         .tabs-content
           .content-name 热门文章
-          .content-warp.layout-row(v-for="(item,index) in article[0]" :key="index")
+          .content-warp.layout-row(v-for="(item,index) in article[0].slice(0,5)" :key="index")
             .icon-warp.layout-row__center.align-center(:style="{color: colorList[Math.floor((Math.random()*colorList.length))]}")
               //- 分类图标
               i(v-if="!cags.find(n => parseInt(item.categories.split(',')[0]) == n.id)" class="icon iconfont iconiconset0401")
@@ -68,7 +68,7 @@
           .span 好
         .tabs-content
           .content-name 最新文章
-          .content-warp.layout-row(v-for="(item,index) in article[1]" :key="index")
+          .content-warp.layout-row(v-for="(item,index) in article[1].slice(0,5)" :key="index")
             .icon-warp.layout-row__center.align-center(:style="{color: colorList[Math.floor((Math.random()*colorList.length))]}")
               //- 分类图标
               i(v-if="!cags.find(n => parseInt(item.categories.split(',')[0]) == n.id)" class="icon iconfont iconiconset0401")
