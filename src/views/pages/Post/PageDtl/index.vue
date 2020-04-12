@@ -1533,6 +1533,9 @@ $articleColor: #333;
       border: 1px solid #dfe2e5;
     }
   }
+  /deep/ p img{
+    max-width: 100%;
+  }
 }
 .isFixed{
   position: fixed;
