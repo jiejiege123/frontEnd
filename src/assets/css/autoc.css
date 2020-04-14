@@ -222,7 +222,7 @@
     overflow: hidden;
     padding: 0 15px;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    /* white-space: nowrap; */
 }
 
 .outline-chapter-code {

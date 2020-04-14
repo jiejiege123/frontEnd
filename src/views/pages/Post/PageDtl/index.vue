@@ -1549,7 +1549,11 @@ $articleColor: #333;
 
   /deep/ .outline-inside-body{
     max-height: calc(100vh - 150px);
-    overflow-y: auto
+    overflow-y: auto;
+    padding: 15px 15px 15px 0
+  }
+  /deep/ .outline-chapter{
+    padding: 0 0 0 15px;
   }
 }
 </style>
