@@ -77,9 +77,19 @@ Viewer.setDefaults(viewerOption)
 
 Vue.config.productionTip = false
 
+// new Vue({
+//   el: '#app',
+//   router,
+//   store,
+//   render: h => h(App)
+// })
+
+// 预渲染
 new Vue({
-  el: '#app',
   router,
   store,
+  mounted() {
+    document.dispatchEvent(new Event('render-event'))
+  },
   render: h => h(App)
-})
+}).$mount('#app')

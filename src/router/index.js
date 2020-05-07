@@ -38,7 +38,7 @@ export const constantRoutes = [
   },
   {
     path: '/admin',
-    component: () => import('@/views/pages/Welcome/index'),
+    component: (res) => require(['@/views/pages/Welcome/index'], res),
     hidden: true
   },
   {
@@ -69,7 +69,7 @@ export const constantRoutes = [
       {
         path: 'welcome',
         name: 'Welcome',
-        component: () => import('@/views/pages/Page/PageList/index'),
+        component: (res) => require(['@/views/pages/Page/PageList/index'], res),
         meta: { title: '首页', aicon: 'iconhome', breadcrumb: false }
         // children: [
         //   {
@@ -92,14 +92,14 @@ export const constantRoutes = [
         path: '/welcome/tag',
         name: 'tag',
         hidden: true,
-        component: () => import('@/views/pages/Page/PageList/index'),
+        component: (res) => require(['@/views/pages/Page/PageList/index'], res),
         meta: { title: '标签', aicon: 'iconhome' },
         children: [
           {
             path: 'detail',
             name: 'tagDetail',
             hidden: true,
-            component: () => import('@/views/pages/Post/PageDtl/index'),
+            component: (res) => require(['@/views/pages/Post/PageDtl/index'], res),
             meta: { title: '正文', aicon: 'iconhome' }
           }
         ]
@@ -108,7 +108,7 @@ export const constantRoutes = [
         path: '/welcome/search',
         name: 'search',
         hidden: true,
-        component: () => import('@/views/pages/Page/PageList/index'),
+        component: (res) => require(['@/views/pages/Page/PageList/index'], res),
         meta: { title: '搜索', aicon: 'iconhome' }
       },
       {
