@@ -43,7 +43,7 @@ import RightWarp from '@/components/RightWarp'
 import ImageDialog from '@/components/ImageDialog'
 import hljs from 'highlight.js/lib/highlight'
 import { getUrlKey } from '@/utils'
-import javascript from 'highlight.js/lib/languages/javascript'
+// import javascript from 'highlight.js/lib/languages/javascript'
 import 'highlight.js/styles/monokai.css'
 // import { highlightLineNumber } from '@/utils/highlight-line-number'
 

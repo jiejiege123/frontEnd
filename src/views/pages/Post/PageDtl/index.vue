@@ -16,7 +16,7 @@
           span {{article.author}}
         .span-warp.linenowarp
           i(class='icon iconfont iconRectangleCopy1')
-          span {{article.creatTime.slice(0, 10)}}
+          span {{article.creatTime?article.creatTime.slice(0, 10): ''}}
         .span-warp.linenowarp
           i(class='icon iconfont iconchangyongicon-')
           span {{article.visits}}次浏览
@@ -75,11 +75,12 @@ export default {
       offsetHeight: '',
       headerFixed: false,
       activeStep: 0,
-      publicPath: process.env.BASE_URL
+      publicPath: process.env.BASE_URL,
+      type: 'article'
     }
   },
   computed: {
-    ...mapGetters(['userInfo', 'cags']),
+    ...mapGetters(['userInfo', 'cags', 'routers', 'router']),
     ...mapState({
       device: state => state.app.device
     }),
@@ -87,7 +88,20 @@ export default {
       return `${process.env.VUE_APP_BASE_API}/Basic/UploadImage`
     },
     id() {
-      return this.$route.query.id
+      if (this.$route.query.id) {
+        return this.$route.query.id
+      } else {
+        // 找到路由的名字
+        console.log(this.routers)
+        console.log(this.$route)
+        const path = this.$route.path.split('/')
+        let route
+        this.routers.forEach(e => {
+          route = e.children.find(i => i.eName === path[path.length - 1])
+        })
+        // path[0]
+        return route.id
+      }
     }
   },
   watch: {
@@ -96,6 +110,11 @@ export default {
     }
   },
   created() {
+    if (this.$route.query.id) {
+      this.type = 'article'
+    } else {
+      this.type = 'pages'
+    }
     this.getDataList()
     window.hljs = hljs
     require('@/utils/highlightjs-line-numbers')
@@ -1418,19 +1437,21 @@ export default {
     /** *** 获取数据 end *** **/
     getDataList() {
       this.loading = true
-      getArticleById({ id: parseInt(this.id), click: true }).then(res => {
+      getArticleById({ id: parseInt(this.id), click: true, type: this.type }).then(res => {
         const data = res.Data
-        const categories = data.categories.split(',')
-        data.categories = ''
-        categories.forEach((e, index) => {
-          const ob = this.cags.find(i => i.id === parseInt(e))
-          e = ob ? this.cags.find(i => i.id === parseInt(e)).cagName : ''
-          if (index > 0) {
-            data.categories = data.categories + '，' + e
-          } else {
-            data.categories = e
-          }
-        })
+        if (data.categories) {
+          const categories = data.categories.split(',')
+          data.categories = ''
+          categories.forEach((e, index) => {
+            const ob = this.cags.find(i => i.id === parseInt(e))
+            e = ob ? this.cags.find(i => i.id === parseInt(e)).cagName : ''
+            if (index > 0) {
+              data.categories = data.categories + '，' + e
+            } else {
+              data.categories = e
+            }
+          })
+        }
         // 设置标签
         this.article = data
         this.$nextTick(() => {
