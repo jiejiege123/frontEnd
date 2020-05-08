@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-19 21:54:17
- * @LastEditTime : 2020-01-06 11:05:41
- * @LastEditors  : Please set LastEditors
+ * @LastEditTime: 2020-05-08 16:40:16
+ * @LastEditors: Please set LastEditors
  */
 import Vue from 'vue'
 
@@ -77,19 +77,19 @@ Viewer.setDefaults(viewerOption)
 
 Vue.config.productionTip = false
 
-// new Vue({
-//   el: '#app',
-//   router,
-//   store,
-//   render: h => h(App)
-// })
-
-// 预渲染
 new Vue({
+  el: '#app',
   router,
   store,
-  mounted() {
-    document.dispatchEvent(new Event('render-event'))
-  },
   render: h => h(App)
-}).$mount('#app')
+})
+
+// 预渲染
+// new Vue({
+//   router,
+//   store,
+//   mounted() {
+//     document.dispatchEvent(new Event('render-event'))
+//   },
+//   render: h => h(App)
+// }).$mount('#app')

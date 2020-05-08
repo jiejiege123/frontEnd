@@ -38,7 +38,7 @@ export const constantRoutes = [
   },
   {
     path: '/admin',
-    component: (res) => require(['@/views/pages/Welcome/index'], res),
+    component: () => import(/* webpackChunkName: "admin" */'@/views/pages/Welcome/index'),
     hidden: true
   },
   {
@@ -69,7 +69,7 @@ export const constantRoutes = [
       {
         path: 'welcome',
         name: 'Welcome',
-        component: (res) => require(['@/views/pages/Page/PageList/index'], res),
+        component: () => import('@/views/pages/Page/PageList/index'),
         meta: { title: '首页', aicon: 'iconhome', breadcrumb: false }
         // children: [
         //   {
@@ -92,14 +92,14 @@ export const constantRoutes = [
         path: '/welcome/tag',
         name: 'tag',
         hidden: true,
-        component: (res) => require(['@/views/pages/Page/PageList/index'], res),
+        component: () => import('@/views/pages/Page/PageList/index'),
         meta: { title: '标签', aicon: 'iconhome' },
         children: [
           {
             path: 'detail',
             name: 'tagDetail',
             hidden: true,
-            component: (res) => require(['@/views/pages/Post/PageDtl/index'], res),
+            component: () => import('@/views/pages/Post/PageDtl/index'),
             meta: { title: '正文', aicon: 'iconhome' }
           }
         ]
@@ -108,14 +108,14 @@ export const constantRoutes = [
         path: '/welcome/search',
         name: 'search',
         hidden: true,
-        component: (res) => require(['@/views/pages/Page/PageList/index'], res),
+        component: () => import('@/views/pages/Page/PageList/index'),
         meta: { title: '搜索', aicon: 'iconhome' }
       },
       {
         path: '/welcome/detail',
         name: 'welcomeDetail',
         hidden: true,
-        component: (res) => require([`@/views/pages/Post/PageDtl/index.vue`], res),
+        component: () => import(`@/views/pages/Post/PageDtl/index`),
         meta: { title: '正文' }
       }
     ]
@@ -129,7 +129,7 @@ export const constantRoutes = [
       {
         path: '/archives',
         name: 'archivesList',
-        component: (res) => require([`@/views/pages/Archive/index.vue`], res),
+        component: () => import(`@/views/pages/Archive/index`),
         meta: { title: '归档', aicon: 'icondonework' }
       }
     ]
@@ -141,8 +141,8 @@ export const constantRoutes = [
     children: [
       {
         path: '/thumb',
-        name: 'archivesList',
-        component: (res) => require([`@/views/pages/Thumb/index.vue`], res),
+        name: 'thumbsList',
+        component: () => import(`@/views/pages/Thumb/index.vue`),
         meta: { title: '动态', aicon: 'iconlocking' }
       }
     ]

@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vue-cli-service serve --open",
     "build:prod": "vue-cli-service build",
+    "report": "vue-cli-service build --report",
     "build:stage": "vue-cli-service build --mode staging",
     "preview": "node build/index.js --preview",
     "lint": "eslint --ext .js,.vue src",
@@ -15,7 +16,6 @@
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
   "dependencies": {
-    "@antv/g6": "^3.0.5-beta.10",
     "autocjs": "^2.0.1",
     "axios": "0.18.1",
     "echarts": "^4.2.1",
@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/register": "7.0.0",
     "@vue/cli-plugin-babel": "3.6.0",
     "@vue/cli-plugin-eslint": "^3.9.1",
@@ -56,6 +57,7 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "23.6.0",
     "chalk": "2.4.2",
+    "compression-webpack-plugin": "^3.1.0",
     "connect": "3.6.6",
     "eslint": "5.15.3",
     "eslint-plugin-vue": "5.2.2",

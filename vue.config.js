@@ -20,6 +20,7 @@ const port = process.env.port || process.env.npm_config_port || 9520 // dev port
 const PrerenderSPAPlugin = require('prerender-spa-plugin')
 const Renderer = PrerenderSPAPlugin.PuppeteerRenderer
 
+const CompressionPlugin = require('compression-webpack-plugin')
 
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
@@ -83,44 +84,51 @@ module.exports = {
         },
         externals: {
           'AMap': 'AMap' // 高德地图配置,
-        // '@/utils/autoc.js': 'AutoJs'
         }
       }
-    }
-    return {
-      name: name,
-      resolve: {
-        alias: {
-          '@': resolve('src')
-        }
-      },
-      externals: {
-        'AMap': 'AMap' // 高德地图配置,
-        // '@/utils/autoc.js': 'AutoJs'
-      },
-      plugins: [
-        new PrerenderSPAPlugin({
-          // 生成文件的路径，也可以与webpakc打包的一致。
-          // 下面这句话非常重要！！！
-          // 这个目录只能有一级，如果目录层次大于一级，在生成的时候不会有任何错误提示，在预渲染的时候只会卡着不动。
-          staticDir: path.join(__dirname, 'dist'),
-          // 对应自己的路由文件，比如a有参数，就需要写成 /a/param1。
-          routes: ['/', '/welcome', '/welcome/detail'],
-          // 这个很重要，如果没有配置这段，也不会进行预编译
-          renderer: new Renderer({
-            inject: {
-              foo: 'bar'
-            },
-            headless: false,
-            // 在 main.js 中 document.dispatchEvent(new Event('render-event'))，两者的事件名称要对应上。
-            renderAfterDocumentEvent: 'render-event'
+    } else {
+      return {
+        name: name,
+        resolve: {
+          alias: {
+            '@': resolve('src')
+          }
+        },
+        externals: {
+          'AMap': 'AMap' // 高德地图配置,
+          // '@/utils/autoc.js': 'AutoJs'
+        },
+        plugins: [
+          // new PrerenderSPAPlugin({
+          //   // 生成文件的路径，也可以与webpakc打包的一致。
+          //   // 下面这句话非常重要！！！
+          //   // 这个目录只能有一级，如果目录层次大于一级，在生成的时候不会有任何错误提示，在预渲染的时候只会卡着不动。
+          //   staticDir: path.join(__dirname, 'dist'),
+          //   // 对应自己的路由文件，比如a有参数，就需要写成 /a/param1。
+          //   routes: ['/welcome'],
+          //   // 这个很重要，如果没有配置这段，也不会进行预编译
+          //   renderer: new Renderer({
+          //     inject: {
+          //       foo: 'bar'
+          //     },
+          //     headless: false,
+          //     // 在 main.js 中 document.dispatchEvent(new Event('render-event'))，两者的事件名称要对应上。
+          //     renderAfterDocumentEvent: 'render-event'
+          //   })
+          // }),
+          new CompressionPlugin({
+            algorithm: 'gzip',
+            test: /\.(js|css)$/, // 匹配文件名
+            threshold: 10240, // 对超过10k的数据压缩
+            deleteOriginalAssets: false, // 不删除源文件
+            minRatio: 0.8 // 压缩比
           })
-        })
-      ]
+        ]
+      }
     }
   },
   chainWebpack(config) {
-    config.plugins.delete('preload') // TODO: need test
+    // config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
 
     // set svg-sprite-loader
@@ -182,6 +190,11 @@ module.exports = {
                   name: 'chunk-elementUI', // split elementUI into a single package
                   priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
                   test: /[\\/]node_modules[\\/]_?element-ui(.*)/ // in order to adapt to cnpm
+                },
+                xlsxTable: {
+                  name: 'chunk-xlsxTable', // split elementUI into a single package
+                  priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
+                  test: /[\\/]node_modules[\\/]_?vue-xlsx-table(.*)/ // in order to adapt to cnpm
                 },
                 commons: {
                   name: 'chunk-commons',
