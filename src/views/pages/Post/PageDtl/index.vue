@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-17 23:54:33
- * @LastEditTime: 2020-03-13 11:11:57
+ * @LastEditTime: 2020-05-19 16:50:19
  * @LastEditors: Please set LastEditors
  -->
 <template lang="pug">
@@ -1610,5 +1610,11 @@ $articleColor: #333;
 }
 .is-clicked-a{
   color: #000 !important;
+}
+.article-content a[href] {
+  color: #0366d6;
+  &:hover{
+    text-decoration: underline;
+  }
 }
 </style>
