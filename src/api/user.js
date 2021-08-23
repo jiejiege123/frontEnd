@@ -2,64 +2,10 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-30 09:31:42
- * @LastEditTime: 2020-03-11 11:51:12
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-08-23 17:38:02
+ * @LastEditors: zzz
  */
 import request from '@/utils/request'
-// import qs from 'qs'
-
-export function login(params) {
-  const data = JSON.stringify(params)
-  return request({
-    url: '/Accounts/Login',
-    method: 'post',
-    data,
-    headers: { 'Content-Type': 'application/json' }
-  })
-}
-
-export function logout() {
-  return request({
-    url: '/user/logout',
-    method: 'post'
-  })
-}
-
-// 获取验证文字和图片
-export function getCodeImage() {
-  return request({
-    url: '/Accounts/VCodeImage',
-    method: 'get'
-  })
-}
-
-// 验证坐标
-export function codeCheck(data) {
-  return request({
-    url: '/Accounts/VCodeCheck',
-    method: 'post',
-    data
-  })
-}
-
-// 修改密码
-export function changePassword(data) {
-  return request({
-    url: '/Accounts/ChangePassword',
-    method: 'post',
-    data,
-    headers: { 'Content-Type': 'multipart/form-data' }
-  })
-}
-
-// 获取系统配置
-export function getSystemInfo() {
-  return request({
-    url: '/Accounts/GetSystemInfo',
-    method: 'get'
-  })
-}
-
 // 接口开始
 export function getInfo() {
   return request({

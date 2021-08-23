@@ -48,8 +48,7 @@ module.exports = {
     proxy: {
       [process.env.VUE_APP_BASE_API]: {
         // target: `http://127.0.0.1:${port}/mock`,
-        target: `https://zemengzhou.top:3000`,
-        // target: `http://localhost:3000`,
+        target: `http://1.14.27.169:3000`,
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''

@@ -1,3 +1,7 @@
+/*
+ * @Author: zzz
+ * @LastEditors: zzz
+ */
 import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
@@ -6,7 +10,6 @@ import settings from './modules/settings'
 import tagsView from './modules/tagsView'
 import user from './modules/user'
 import permission from './modules/permission'
-import dics from './modules/dics'
 
 Vue.use(Vuex)
 
@@ -17,7 +20,6 @@ const store = new Vuex.Store({
     tagsView,
     user,
     permission,
-    dics
   },
   getters
 })

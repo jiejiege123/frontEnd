@@ -43,108 +43,7 @@
         </el-dropdown-menu>
       </el-dropdown> -->
     </div>
-    <el-dialog
-      title="修改密码"
-      :visible.sync="dialogFormVisible"
-      append-to-body
-      width="30%"
-      class="dialog-class"
-      @open="open('pwdform')"
-    >
-      <el-form ref="pwdform" :model="form" :rules="rules">
-        <el-form-item prop="oldPassword" label="原密码" label-width="80px">
-          <el-input
-            :key="oldPasswordType"
-            ref="oldPasswordType"
-            v-model="form.oldPassword"
-            :type="oldPasswordType"
-            placeholder="请输入旧密码"
-            name="password"
-            tabindex="2"
-            size="small"
-            auto-complete="on"
-          />
-          <span slot="suffix" class="show-pwd" @click="showPwd('oldPasswordType')">
-            <svg-icon :icon-class="oldPasswordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
 
-        </el-form-item>
-
-        <el-form-item prop="newPassword" label="新密码" label-width="80px">
-
-          <el-input
-            :key="newPasswordType"
-            ref="newPasswordType"
-            v-model="form.newPassword"
-            :type="newPasswordType"
-            placeholder="请输入新密码"
-            name="password"
-            tabindex="2"
-            size="small"
-            auto-complete="on"
-          />
-          <span slot="suffix" class="show-pwd" @click="showPwd('newPasswordType')">
-            <svg-icon :icon-class="newPasswordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
-
-        </el-form-item>
-
-        <el-form-item prop="checkPassword" label="确认密码" label-width="80px">
-
-          <el-input
-            :key="checkPasswordType"
-            ref="checkPasswordType"
-            v-model="form.checkPassword"
-            :type="checkPasswordType"
-            placeholder="请再次输入新密码"
-            name="password"
-            size="small"
-            tabindex="2"
-            auto-complete="on"
-            @keyup.enter.native="handlePost('pwdform')"
-          />
-          <span slot="suffix" class="show-pwd" @click="showPwd('checkPasswordType')">
-            <svg-icon :icon-class="checkPasswordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
-
-        </el-form-item>
-
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" size="small" @click="handlePost('pwdform')">确 定</el-button>
-      </div>
-    </el-dialog>
-    <el-dialog
-      title="修改信息"
-      :visible.sync="dialogUploadVisible"
-      append-to-body
-      width="30%"
-      :close-on-click-modal="false"
-      class="dialog-class"
-      @open="open('formDialog')"
-    >
-      <el-form ref="formDialog" :model="infoForm" label-width="80px" :rules="userRules">
-        <el-form-item class="pt10" label="公章" prop="Seal">
-          <img v-if="infoForm.Seal && formDialog.type==='view' || formDialog.type==='approve'" class="avatar" :src="infoForm.Seal | filterImg" style="margin:10px; cursor: pointer;">
-          <el-upload
-            v-else
-            class="avatar-uploader"
-            :action="action"
-            :show-file-list="false"
-            :on-success="handleSealSuccess"
-            :before-upload="beforeAvatarUpload"
-          >
-            <img v-if="infoForm.Seal" class="avatar" :src="infoForm.Seal | filterImg">
-            <i v-else class="el-icon-plus avatar-uploader-icon" /></el-upload>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="dialogUploadVisible = false">取 消</el-button>
-        <el-button type="primary" size="small" @click="handleUpload('formDialog')">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -152,11 +51,9 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import { changePassword } from '@/api/user'
 
 import md5 from 'js-md5'
 
-import { updateDepartmentData } from '@/api/system/department'
 export default {
   components: {
     Breadcrumb,
@@ -314,26 +211,7 @@ export default {
      * @param {type} ''
      * @return: ''
      */
-    handlePost(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          const newPassword = md5(this.form.newPassword)
-          var formData = new FormData()
 
-          formData.append('oldPassword', this.form.oldPassword)
-          formData.append('newPassword', newPassword)
-
-          changePassword(formData).then(res => {
-            this.$message.success('密码修改成功')
-            this.logout()
-          })
-        } else {
-          this.$message.error('请将加*内容填写完整')
-          console.error('error submit!!')
-          return false
-        }
-      })
-    },
     showPwd(type) {
       if (this[type] === 'password') {
         this[type] = ''
@@ -362,21 +240,7 @@ export default {
       // this.infoForm.Seal = this.userInfo.DepartmentMode.Seal
       this.$set(this.infoForm, 'Seal', this.userInfo.DepartmentMode.Seal)
     },
-    handleUpload(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          updateDepartmentData(this.infoForm).then(res => {
-            this.$message.success(res.Msg)
-            this.dialogUploadVisible = false
-          }).catch(err => {
-            console.error(err)
-          })
-        } else {
-          console.error('error submit!!')
-          return false
-        }
-      })
-    }
+
   }
 }
 </script>

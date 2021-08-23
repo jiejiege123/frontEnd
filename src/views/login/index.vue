@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-30 09:31:42
- * @LastEditTime: 2019-09-06 11:37:18
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-08-23 17:36:38
+ * @LastEditors: zzz
  -->
 <template>
   <div class="login-container">
@@ -73,7 +73,6 @@
 // import { validUsername } from '@/utils/validate'
 import md5 from 'js-md5'
 import Verify from '@/components/Verify/Verify'
-import { getCodeImage, codeCheck } from '@/api/user'
 export default {
   name: 'Login',
   components: {
@@ -168,59 +167,7 @@ export default {
         this.loading = false
       })
     },
-    /**
-   * @description: 滑动验证成功
-   * @param {type}
-   * @return:
-   */
-    slideSuccess(cab) {
-      this.$store.commit('user/SET_LOADING', true)
-      getCodeImage().then(res => {
-        this.$store.commit('user/SET_LOADING', false)
 
-        // this.finishtip = res.Data.TipText
-        this.$store.commit('user/SET_FINISHTIP', res.Data.TipText)
-        this.$store.commit('user/SET_VERIFYFLAG', true)
-        this.imgUrl = res.Data.ImageBase64
-        this.checkNum = res.Data.Length
-        if (cab) {
-          cab()
-          // cab(this.finishtip)
-        }
-        this.showPoints = true
-      }).catch(err => {
-        this.$store.commit('user/SET_LOADING', false)
-        console.error(err)
-      })
-    },
-    /**
-     * @description: 检查点
-     * @param {type}
-     * @return:
-     */
-    checkPoint(checkPosArr, cab) {
-      const checkPos = []
-      this.$store.commit('user/SET_LOADING', true)
-      checkPosArr.forEach(n => {
-        checkPos.push(
-          {
-            '_X': n.x,
-            '_Y': n.y
-          }
-        )
-      })
-      codeCheck(checkPos).then(res => {
-        this.$store.commit('user/SET_LOADING', false)
-        // this.finishtip = res.Msg
-        this.$store.commit('user/SET_FINISHTIP', res.Msg)
-        this.showPoints = false
-        this.isChecked = true
-        this.checkNow = true
-      }).catch(() => {
-        this.$refs.pointRef.refresh()
-        this.$store.commit('user/SET_LOADING', false)
-      })
-    }
   }
 }
 </script>
