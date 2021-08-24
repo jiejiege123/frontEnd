@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-03-11 08:54:13
- * @LastEditTime: 2020-04-02 15:33:53
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-08-24 15:19:21
+ * @LastEditors: zzz
  * @Description: In User Settings Edit
  * @FilePath: \bpsp-uie:\doit\oneStep\frontend\src\components\RightWarp\index.vue
  -->
@@ -25,7 +25,7 @@
           .span 你
           i(class="icon iconfont iconzan2")
           .span 好
-        .tabs-content
+        .tabs-content(v-if="article[0]")
           .content-name 热门文章
           .content-warp.layout-row(v-for="(item,index) in article[0].slice(0,5)" :key="index")
             .icon-warp.layout-row__center.align-center(:style="{color: colorList[Math.floor((Math.random()*colorList.length))]}")
@@ -66,7 +66,7 @@
           .span 好
           i(class="icon iconfont iconliwu")
           .span 好
-        .tabs-content
+        .tabs-content(v-if="article[1]")
           .content-name 最新文章
           .content-warp.layout-row(v-for="(item,index) in article[1].slice(0,5)" :key="index")
             .icon-warp.layout-row__center.align-center(:style="{color: colorList[Math.floor((Math.random()*colorList.length))]}")
@@ -162,7 +162,7 @@ export default {
       return `${process.env.VUE_APP_BASE_API}/Basic/UploadImage`
     },
     activeTime() {
-      if (this.article[3]) {
+      if (this.article[3] && this.article[3][0]) {
         return parseTime(this.article[3][0].activeTime, '{y}-{m}-{d}')
       } else {
         return 0

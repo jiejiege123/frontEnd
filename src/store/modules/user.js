@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-30 09:31:42
- * @LastEditTime: 2020-03-11 11:53:51
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-08-24 15:12:29
+ * @LastEditors: zzz
  */
 import { login, logout, getInfo, getRouter, getSystemInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
@@ -397,6 +397,7 @@ const actions = {
           n.url = 'PageList'
         })
         dataList = toTree(dataList, 'id', 'pid')
+        
         const dataDe = res.Data[0]
         dataDe.forEach(n => {
           n.name = n.title

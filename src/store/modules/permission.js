@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-07-21 16:07:15
- * @LastEditTime : 2020-01-14 09:42:53
- * @LastEditors  : Please set LastEditors
+ * @LastEditTime: 2021-08-24 15:28:58
+ * @LastEditors: zzz
  */
 import { constantRoutes } from '@/router'
 import Layout from '@/layout'
@@ -58,6 +58,7 @@ const actions = {
   generateRoutes({ commit }, routers) {
     return new Promise(resolve => {
       const addRoutes = []
+      console.log(routers);
       // 将数组写成路由标准路由格式
       routers.map(n => {
         const childrenComponents = []
@@ -140,12 +141,18 @@ const actions = {
             )
           }
         })
+        let redirect
+        if (n.children[0]) {
+          redirect = `/${n.url}/${n.children[0].url}/${n.children[0].eName}`
+        } else {
+          redirect = ''
+        }
         addRoutes.push(
           {
             path: `/${n.url}`,
             alwaysShow: false,
             component: Layout,
-            redirect: `/${n.url}/${n.children[0].url}/${n.children[0].eName}`,
+            redirect: redirect,
             name: 'c' + n.id,
             meta: { title: n.name, aicon: n.icon },
             up: n.up,
